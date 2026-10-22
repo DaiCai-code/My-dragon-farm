@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button>点击我</button>
+</body>
+<script>
+  function fun() {
+    alert('hello world2')
+  }
+  function fun2() {
+    alert('hello world3')
+  }
+  let btn = document.querySelector("button")
+
+  // 事件监听,采用匿名方法
+  btn.addEventListener(
+    "click",
+    ()=>{
+      alert('hello world')
+    }
+  )
+  // 事件监听,采用命名方法
+  btn.addEventListener(
+    "click",
+    // 注意：这里方法不能加括号
+    // `fun()` 立刻执行 这个函数，用它的返回值 
+    // `fun` 把函数 本身 当作一个值传递，谁拿到谁决定什么时候调用
+    fun
+  )
+  // 记住一句话： 给事件监听传命名函数时，写函数名不加括号
+  btn.addEventListener(
+    "click",
+    fun2
+  )
+
+
+</script>
+
+</html>

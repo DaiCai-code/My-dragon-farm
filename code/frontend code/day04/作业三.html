@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+//   作业三 : 按照如下需求定义函数完成功能
+// 需求 : 
+// 1. 定义函数 , 获取数组中元素的最大值
+// 2. 定义函数 , 获取数组中元素的最小值
+// 3. 定义函数 , 获取数组中元素的和
+// 4. 定义函数 , 获取数组中元素的平均值
+// 5. 定义函数 , 获取数组中去除最大值和最小值之后的平均值
+
+//定义一个数字数组
+let arry = [1,2,3,4,5,6,7,8,9,10]
+// 1.获取数组中的最大值
+function getMax(arrys){
+  let max = arrys[0]
+  for(let i = 0 ; i <= arrys.length-1;i++){
+    arrys[i]>max?max=arrys[i]:max
+  }
+  return max
+}
+let Max = getMax(arry)
+document.write(Max)
+document.write('<br>')
+
+//2.获取数组中的最小值
+function getMin(arrys){
+  let min = arrys[0]
+  for(let i = 0 ; i <= arrys.length-1;i++){
+    arrys[i]<min?min=arrys[i]:min
+  }
+  return min
+}
+let Min = getMin(arry)
+document.write(Min)
+document.write('<br>')  
+
+//3.获取数组中的元素和
+function getSum(arrys){
+  let sum = 0
+  for(let i = 0 ; i <= arrys.length-1;i++){
+    sum += arrys[i]
+  }
+  return sum
+}
+let Sum = getSum(arry)
+document.write(Sum)
+document.write('<br>')  
+
+//4.获取数组中的元素平均值
+function getAvg(arrys){
+  let avg = 0
+  let Sum = getSum(arrys)
+  avg  = Sum/arrys.length
+  return avg
+}
+let Avg = getAvg(arry)
+document.write(Avg)
+document.write('<br>')  
+
+// 5. 定义函数 , 获取数组中去除最大值和最小值之后的平均值
+function getAvgWithoutMaxMin(arrys){
+  let awm = 0
+  let max = getMax(arrys)
+  let min = getMin(arrys)
+  let Sum = getSum(arrys)
+  awm = (Sum-max-min)/(arrys.length-2)
+  return awm
+}
+let Awm = getAvgWithoutMaxMin(arry)
+document.write(Awm)
+document.write('<br>')  
+
+
+</script>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" class="score-case">
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>科目</th>
+                        <th>成绩</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+            <td>1</td>
+            <td>语文</td>
+            <td class="red">46</td>
+            <td><a href="#">删除</a></td>
+          </tr>
+          -->
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <span class="total">总分：246</span>
+                            <span style="margin-left: 50px" class="average">平均分：79</span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="form">
+            <div class="form-item">
+                <div class="label">姓名：</div>
+                <div class="input">
+                    <input type="text" placeholder="请输入姓名" class="username" />
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="label">科目：</div>
+                <div class="input">
+                    <input type="text" placeholder="请输入科目" class="subject" />
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="label">分数：</div>
+                <div class="input">
+                    <input type="text" placeholder="请输入分数" class="score" />
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="label"></div>
+                <div class="input">
+                    <button class="submit">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const list = [
+            { name: '古丽扎娜', subject: '语文', score: 20 },
+            { name: '佟丽丫丫', subject: '数学', score: 99 },
+            { name: '马尔扎哈', subject: '英语', score: 70 },
+        ]
+
+        //1. 定义方法，将提供的学生数据展示到页面
+        function showData() {
+            let trs = ``;  //用于拼接tr行
+            let sum = 0;  //定义求和变量，用于保存总分
+            //1 遍历list数组，获取每一个学生对象
+            for (let i = 0; i < list.length; i++) {
+                // 获取每一个学生对象;
+                let student = list[i];  //例如：student={ name: '古丽扎娜', subject: '语文', score: 20 }
+                //2 有几个学生对象就拼接几个tr
+                trs += `<tr>
+            <td>${student.name}</td>
+            <td>${student.subject}</td>
+            <td class="red">${student.score}</td>
+            <td><a href="#">删除</a></td>
+          </tr>`;
+                //将每个学生的分数累加到sum中
+                sum += student.score;
+            }
+            //3 将拼接好的tr设置到tbody标签中
+            document.querySelector('tbody').innerHTML = trs;
+            //4. 显示总分和平均分
+            document.querySelector('.total').innerHTML = `总分：${sum}`;
+            document.querySelector('.average').innerHTML = `平均分：${sum / list.length}`;
+        }
+        //调用方法，方法才执行，页面才有数据
+        showData();
+
+        //2. 完成新增功能，输入相关数据可以展示页面
+        //1 给添加按钮绑定click单击事件
+        document.querySelector('.submit').addEventListener('click', () => {
+            //2 获取三个输入框中的值(内容:姓名、科目、分数)
+            let username = document.querySelector('.username').value;
+            let subject = document.querySelector('.subject').value;
+            let score = document.querySelector('.score').value;  //是一个字符串分数
+
+            //3 将三个值封装成学生对象，添加到list数组中
+            let student = {
+                name: username,
+                subject: subject,
+                score: Number(score),
+            }
+            list.push(student);
+            //4 重新调用showData方法，展示数据
+            showData();
+        })
+    </script>
+</body>
+
+</html>

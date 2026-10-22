@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+  //break和continue的使用和二者的区别
+  //break语句：用于跳出循环，结束循环的执行
+  //continue语句：用于跳过当前循环的执行，继续下一次循环
+  //1到100逢7过
+  for(let num = 1 ;num<=100;num++){
+    let ge = num % 10
+    let shi =parseInt(num / 10)
+    if(ge == 7 || shi == 7){
+      document.write('过！')
+      document.write('<br>')
+      continue
+    }else{
+      document.write(num)
+      document.write('<br>')
+    }
+  }
+
+</script>
+</html>

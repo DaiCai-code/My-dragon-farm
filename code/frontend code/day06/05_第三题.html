@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业3</title>
+    <style>
+        table {
+            /* 设置表格的宽度 */
+            width: 60%;
+            /* 将表格边框合并，消除单元格之间的间距 */
+            border-collapse: collapse;
+            /* 将表格边框间的距离设置为0，确保没有任何间距 */
+            border-spacing: 0;
+            /* 文本居中对齐 */
+            text-align: center;
+            /* 版心居中展示 */
+            margin: auto;
+            /* 距离顶部的外边距 */
+            margin-top: 20px;
+            /* 行高 */
+            line-height: 30px;
+            /* 字体 */
+            font-family: 'Courier New', 华文中宋, monospace;
+        }
+
+        table,
+        tr,
+        th,
+        td {
+            /* 设置表格的边框 */
+            border: 1px solid black;
+        }
+
+        div {
+            /* 文本居中对齐 */
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="font-size: 30px; text-align: center;" id="tb1">课程表</div>
+    <table width="800px" border="1" cellspacing="0" align="center">
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>分数</th>
+            <th>评语</th>
+        </tr>
+        <tr align="center" class="data">
+            <td>001</td>
+            <td>张三</td>
+            <td>90</td>
+            <td>很优秀</td>
+        </tr>
+        <tr align="center" class="data">
+            <td>002</td>
+            <td>李四</td>
+            <td>92</td>
+            <td>优秀</td>
+        </tr>
+        <tr align="center" class="data">
+            <td>003</td>
+            <td>王五</td>
+            <td>83</td>
+            <td>很努力,不错</td>
+        </tr>
+        <tr align="center" class="data">
+            <td>004</td>
+            <td>赵六</td>
+            <td>98</td>
+            <td>666</td>
+        </tr>
+    </table>
+
+    <br>
+</body>
+
+<script>
+    let trs = document.querySelectorAll(".data")
+    //通过遍历所有的tr给其绑定事件
+    trs.forEach(
+       //index是forEach回调函数的第二个参数，
+        (tr,index)=>{
+            //绑定鼠标悬停事件
+            tr.addEventListener(
+                "mouseover",
+                () =>{
+                    if(index%2==0){
+                        tr.style.backgroundColor = "#fbc320"
+                    }else{
+                        tr.style.backgroundColor = "#259745"
+                    }
+                }
+            )
+            //绑定鼠标移出事件
+            tr.addEventListener(
+                "mouseout",
+                () =>{
+                    tr.style.backgroundColor = ""
+                }
+            )
+        }
+    )
+</script>
+
+</html>

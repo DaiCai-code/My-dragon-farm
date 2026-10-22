@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>客户信息表单</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+        }
+        body {
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .item {
+            margin-bottom: 26px;
+        }
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: calc(100% - 85px);
+            padding: 16px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .radio-group {
+            margin-left: 85px;
+        }
+        .radio-group input {
+            margin: 0 8px 0 20px;
+        }
+        .btn-box {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        button {
+            width: 45%;
+            padding: 16px;
+            border-radius: 30px;
+            border: none;
+            font-size:22px;
+        }
+        #reset {
+            background-color: #eeeeee;
+        }
+        #submit {
+            background-color: #00c878;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<form>
+    <div class="item">
+        <label>姓名</label>
+        <input type="text" placeholder="请输入客户姓名">
+    </div>
+    <div class="item">
+        <label>手机</label>
+        <input type="tel" placeholder="请输入手机号">
+    </div>
+    <div class="item">
+        <label>性别</label>
+        <div class="radio-group">
+            <input type="radio" name="sex" id="man">
+            <label for="man">男</label>
+            <input type="radio" name="sex" id="woman">
+            <label for="woman">女</label>
+            <input type="radio" name="sex" id="unknown">
+            <label for="unknown">未知</label>
+        </div>
+    </div>
+    <div class="item">
+        <label>年龄</label>
+        <input type="number" placeholder="请输入年龄">
+    </div>
+    <div class="item">
+        <label>QQ</label>
+        <input type="text" placeholder="请输入qq">
+    </div>
+    <div class="item">
+        <label>学科</label>
+        <select>
+            <option value="">请选择意向学科</option>
+            <option>AI智能应用</option>
+            <option>AI大模型</option>
+            <option>AI运维</option>
+            <option>AI测试</option>
+            <option>大数据</option>
+        </select>
+    </div>
+    <div class="item">
+        <label>渠道</label>
+        <select>
+            <option value="">请选择渠道来源</option>
+            <option>线上活动</option>
+            <option>推广介绍</option>
+        </select>
+    </div>
+    <div class="item">
+        <label>备注</label>
+        <textarea maxlength="20" placeholder="请输入备注"></textarea>
+    </div>
+
+    <div class="btn-box">
+        <button type="reset" id="reset">重置</button>
+        <button type="submit" id="submit">提交</button>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有关字符串的注意事项</title>
+</head>
+<body>
+  
+</body>
+<script>
+  //第一点：字符串的引号可以嵌套使用，但不能自己嵌套自己，外双内单，或外单内双
+  let s1 = '今天的天气"真不错"'
+  document.write(s1)
+  let s2 = "今天的天气'真不错'"
+  document.write(s2)
+  // let s3 = "今天的天气"真不错""不能自己嵌套自己
+  // document.write(s3)
+
+  //第二点：使用标量时，不能给变量加引号，否则变量会变成一个字符串
+  // let a = 10
+  // document.write("a")
+
+  //第三点：变量和字符串之间拼接可以使用+拼接，也可以使用模板字符串
+  //模板字符串：使用反引号，变量名使用${}包装
+  //使用+拼接字符串
+  let b= 10
+  document.write("b值是" + b)
+  //模板字符串
+  let a = 10
+  document.write(`a的值是${a}`)
+
+  
+  </script>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>函数的返回值</title>
+</head>
+<body>
+  
+</body>
+<script>
+  function getSum(start,end){
+    let sunm = 0
+    for(let i = start;i<=end;i++){
+      sunm += i
+    }
+    return sunm
+    //alert("end"),执行不到，return不仅可以返回数据，还可以结束函数，
+  }
+  let sum = getSum(1,100)
+  document.write(sum)
+</script>
+</html>

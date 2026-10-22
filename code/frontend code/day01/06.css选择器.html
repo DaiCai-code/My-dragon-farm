@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>css选择器</title>
+   <style>
+    /* 一、元素选择器：使用【元素名】 */
+     span{
+      color: red;
+    } 
+
+    /* 二、类选择器：使用【.类名】 */
+     .c1{
+      color: rgb(20, 247, 186);
+      font-size: 30px;
+     }
+
+     /* 三、id选择器：使用【#id名】 */
+     #id1{
+      font-size: 30px;
+     }
+     
+     a,.c1,#id1{
+      color: rgb(204, 94, 147);
+      font-size: 60px;
+     }
+
+     a,#id1{
+      color: rgb(204, 94, 147);
+      font-size: 100px;
+     }
+
+     a{
+      color: rgb(204, 94, 147);
+      font-size: 200px;
+     }
+
+   </style>
+</head>
+<body>
+  <span class="c1" id="id1">张三</span>
+  <span class="c1">李四</span>
+  <span>王五</span>
+  <span>赵六<span>
+  <span>周七</span>
+  <span>郭八</span>
+  <a href="">我是一个超链接</a>
+
+
+</body>
+</html>

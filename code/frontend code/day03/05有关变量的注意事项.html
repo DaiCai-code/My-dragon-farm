@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>有关变量的注意事项</title>
+</head>
+<body>
+  
+</body>
+
+<script>
+  //第一点：变量不赋值直接打印，会出现未定义
+  // document.write(a)
+  //第二点：不能定义同名的变量
+  // let a = 10
+  // let a = 20
+  // document.write(a)
+  //第三点：变量可以定义在大括号中，但是不能在大括号外部使用
+  {
+    let a = 10
+  }
+  // document.write(a)
+  // let a = 100
+  // document.write(a)
+  //第四点：多个变量可以定义在一行，多个变量之间使用逗号隔开
+  let hobby = '篮球',age = 18,gender = '男',height = 1.88,weight = 72.2
+  document.write(hobby)
+  document.write('<br>')
+  document.write(age)
+  document.write('<br>')
+  document.write(gender)
+  document.write('<br>')
+  document.write(height)
+  document.write('<br>')
+  document.write(weight)
+
+  //第五点:使用const定义的变量，不能重新赋值，只能在定义的时候赋值一次
+  //且必须在定义的时候赋值，否则会报错
+  const a = 10
+  // a = 20
+  // document.write(a)
+
+</script>
+</html>
