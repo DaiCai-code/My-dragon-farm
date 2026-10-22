@@ -218,3 +218,42 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------- Java ----------
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+target/
+build/
+out/
+hs_err_pid*
+.mvn/timing.properties
+
+# ---------- IDE ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# ---------- Windows ----------
+Thumbs.db
+Desktop.ini
+
+# ---------- 密钥 / 配置 ----------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*credential*
+config.local.*
+
+# ---------- 大文件 ----------
+*.zip
+*.7z
+*.mp4
+*.pth
+*.bin
+*.safetensors
+*.onnx
