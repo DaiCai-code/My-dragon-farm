@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能学习辅助系统</title>
+
+  <style>
+    .box1 {
+      display: flex;
+      justify-content: space-between;
+      background-color: rgb(170, 170, 170);
+      color: white;
+      line-height: 40px;
+      font-family: 楷体;
+      font-weight: bold;
+    }
+
+    .title {
+      margin-left: 20px;
+    }
+
+    .logout {
+      margin-right: 20px;
+    }
+
+    .box2 {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    input,
+    select {
+      width: 200px;
+      height: 23px;
+      box-sizing: border-box;
+    }
+
+    .button {
+      width: 50px;
+      height: 25px;
+      background-color: rgb(135, 166, 222);
+      color: white;
+      border: none;
+    }
+
+    .box3 {
+      margin-top: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      text-align: center;
+    }
+
+    th {
+      background-color: rgb(241, 241, 241);
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      height: 40px;
+    }
+
+    td button {
+      background-color: rgb(243, 204, 145);
+      border: none;
+      color: white;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .box4 {
+      margin-top: 50px;
+      text-align: center;
+      color: white;
+      line-height: 30px;
+      background-color: rgb(215, 215, 215);
+    }
+    .parent-box{
+      margin: 0 auto;
+      width: 80%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="parent-box">
+    <div class="box1">
+      <div class="title">智能学习辅助系统</div>
+      <div class="logout">🔚退出登录</div>
+    </div>
+
+    <form action="" class="box2" method="get">
+      <div>
+        姓名&nbsp;&nbsp;<input type="text" name="username" placeholder="请输入员工姓名">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        性别&nbsp;&nbsp;<select name="gender">
+          <option value="">请选择</option>
+          <option value="man">男</option>
+          <option value="woman">女</option>
+        </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        职位&nbsp;&nbsp;<select name="position">
+          <option value="">请选择</option>
+          <option value="teacher">教师</option>
+          <option value="student">学生</option>
+          <option value="assistant">助手</option>
+        </select>
+      </div>
+      <div>
+        <input class="button" type="button" value="查询">&nbsp;&nbsp;&nbsp;
+        <input class="button" type="button" value="清空">
+      </div>
+    </form>
+
+    <div class="box3">
+      <table>
+        <tr>
+          <th>姓名</th>
+          <th>性别</th>
+          <th>头像</th>
+          <th>职位</th>
+          <th>入职日期</th>
+          <th>操作时间</th>
+          <th>操作</th>
+        </tr>
+        <tr>
+          <td>张三</td>
+          <td>男</td>
+          <td><img src="imgs\123.png" alt=""></td>
+          <td>讲师</td>
+          <td>2026-01-01</td>
+          <td>2026-01-01</td>
+          <td><button>编辑</button>&nbsp;&nbsp;<button>删除</button></td>
+        </tr>
+        <tr>
+          <td>张三</td>
+          <td>男</td>
+          <td><img src="imgs\123.png" alt=""></td>
+          <td>讲师</td>
+          <td>2026-01-01</td>
+          <td>2026-01-01</td>
+          <td><button>编辑</button>&nbsp;&nbsp;<button>删除</button></td>
+        </tr>
+        <tr>
+          <td>张三</td>
+          <td>男</td>
+          <td><img src="imgs\123.png" alt=""></td>
+          <td>讲师</td>
+          <td>2026-01-01</td>
+          <td>2026-01-01</td>
+          <td><button>编辑</button>&nbsp;&nbsp;<button>删除</button></td>
+        </tr>
+        <tr>
+          <td>张三</td>
+          <td>男</td>
+          <td><img src="imgs\123.png" alt=""></td>
+          <td>讲师</td>
+          <td>2026-01-01</td>
+          <td>2026-01-01</td>
+          <td><button>编辑</button>&nbsp;&nbsp;<button>删除</button></td>
+        </tr>
+      </table>
+
+      <div class="box4">
+        江苏传智播客教育科技股份有限公司<br>
+        版权所有 Copyright 2006-2024 All Rights Reserved
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

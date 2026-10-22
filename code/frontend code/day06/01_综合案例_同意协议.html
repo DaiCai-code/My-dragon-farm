@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        label {
+            width: 150px;
+            /* 文字右对齐 */
+            text-align: right;
+            display: inline-block;
+            /* 调整右内边距为10px */
+            padding-right: 10px;
+        }
+
+        .right {
+            width: 300px;
+            line-height: 35px;
+        }
+
+        div {
+            margin-top: 20px;
+        }
+
+        button {
+            border: 1px;
+            background: rgb(230, 244, 238);
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        行内元素: 默认在一行中显示的标签, 比如span, 比如img, 默认被内容撑开的元素, 没有宽高的概念
+
+        块级元素: 独占一行元素, 比如div, h1~h6, p ,只有块级元素有宽高的概念
+
+        行内(块):  既能在一行中显示, 还有宽高的概念
+
+        display:
+            inline : 行内
+            block: 块
+            inline-block:
+    -->
+
+
+
+    <form action="">
+        <div>
+            <label for="username">用户名:</label> <input class="right" type="text" name="username" id="username">
+        </div>
+        <div>
+            <label for="email">邮箱:</label> <input class="right" type="email" name="email" id="email">
+        </div>
+
+        <div>
+            <label for="password">登录密码:</label> <input type="password" class="right" name="password" id="password">
+        </div>
+        <div>
+            <label for="conpassword">确认密码:</label> <input class="right" type="password" name="conpassword"
+                id="conpassword">
+        </div>
+        <div>
+            <label for=""></label> <input type="checkbox" id="agree"> 同意协议并注册 xxxx用户协议
+        </div>
+        <div>
+            <label for=""></label> <button id="sub" disabled="disabled" class="right">完成注册</button>
+        </div>
+    </form>
+
+    <script>
+        // 找到同意协议的复选框
+        let agree = document.querySelector("#agree");
+        // 绑定单击事件
+        agree.addEventListener(
+            "click",
+            () => {
+                let sub = document.querySelector("#sub");
+                if (agree.checked) {
+                    sub.disabled = false;
+                    sub.style.backgroundColor = "red";
+                    sub.style.color = "white";
+                } else {
+                    sub.disabled = true;
+                    sub.style.backgroundColor = "#c4b7d7";
+                    sub.style.color = "black";
+                }
+            }
+        )
+    </script>
+
+</body>
+
+</html>

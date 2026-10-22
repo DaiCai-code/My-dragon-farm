@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作业2 - DOM操作与事件绑定</title>
+  <style>
+    /* 标题：居中、大字加粗 */
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    /* 表格：整体居中 */
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #000;
+      padding: 6px 24px;
+      text-align: center;
+    }
+
+    /* 按钮区：居中 */
+    .btns {
+      margin-top: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 标题（需求1、2都作用在它身上） -->
+  <div class="title">课程表</div>
+
+  <!-- 成绩表 -->
+  <table>
+    <thead>
+      <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>分数</th>
+        <th>评语</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>001</td>
+        <td>张三</td>
+        <td>90</td>
+        <td>很优秀</td>
+      </tr>
+      <tr>
+        <td>002</td>
+        <td>李四</td>
+        <td>92</td>
+        <td>优秀</td>
+      </tr>
+      <tr>
+        <td>003</td>
+        <td>王五</td>
+        <td>83</td>
+        <td>很努力,不错</td>
+      </tr>
+      <tr>
+        <td>004</td>
+        <td>赵六</td>
+        <td>98</td>
+        <td>666</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 三个功能按钮 -->
+  <div class="btns">
+    <button class="btn-text">改变标题内容</button>
+    <button class="btn-color">改变标题颜色</button>
+    <button class="btn-del">删除最后一个</button>
+  </div>
+
+  <script>
+    // 先拿到标题 div
+    const title = document.querySelector('.title')
+
+    // ============ 需求1：改变标题内容（再点一次可以还原） ============
+    // 判断当前文字：还是"课程表"就换成"学员成绩表"，否则换回来
+    document.querySelector('.btn-text').addEventListener('click', function () {
+      if (title.innerText === '课程表') {
+        title.innerText = '学员成绩表'
+      } else {
+        title.innerText = '课程表'
+      }
+    })
+
+    // ============ 需求2：改变标题颜色（再点一次可以还原） ============
+    // 只改 color，不动 font-size 和 text-align，所以大小和居中效果都保留
+    // 当前是红色 → 把行内颜色清空('')，回到 CSS 的默认黑色；否则设为红色
+    document.querySelector('.btn-color').addEventListener('click', function () {
+      if (title.style.color === 'red') {
+        title.style.color = ''
+      } else {
+        title.style.color = 'red'
+      }
+    })
+
+    // ============ 需求3：删除最后一行 ============
+    // 注意只取 tbody 里的 tr，这样不会把表头那行也删掉
+    document.querySelector('.btn-del').addEventListener('click', function () {
+      const rows = document.querySelectorAll('tbody tr')
+
+      if (rows.length > 0) {
+        rows[rows.length - 1].remove()   // tr 对象自带的 remove()，把自己从页面中移除
+      }
+    })
+  </script>
+</body>
+
+</html>

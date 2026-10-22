@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>课程信息管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            padding: 30px 40px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        /* 查询区域 */
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap:16px;
+            margin-bottom:25px;
+        }
+        .search-box label{
+            font-size:17px;
+        }
+        .search-box select,.search-box input{
+            padding:7px 10px;
+            font-size:16px;
+            border:1px solid #aaa;
+            border-radius:3px;
+        }
+        .btn-query{
+            background-color:#218ede;
+            color:#fff;
+            border:none;
+            padding:8px 24px;
+            border-radius:4px;
+            font-size:16px;
+        }
+        .btn-reset{
+            background-color:#74787c;
+            color:#fff;
+            border:none;
+            padding:8px 24px;
+            border-radius:4px;
+            font-size:16px;
+        }
+        /* 课程表格 */
+        table{
+            width:100%;
+            border-collapse: collapse;
+        }
+        th,td{
+            border:1px solid #999;
+            text-align:center;
+            padding:14px 8px;
+            font-size:16px;
+        }
+        th{
+            background-color:#73c8f0;
+            color:#000;
+        }
+    </style>
+</head>
+<body>
+    <h1>课程信息管理系统</h1>
+
+    <!-- 查询筛选区域 -->
+    <div class="search-box">
+        <label>课程学科:</label>
+        <select>
+            <option value="">请选择</option>
+            <option>AI智能应用开发(Java)</option>
+            <option>AI大模型开发(Python)</option>
+            <option>AI鸿蒙开发</option>
+            <option>AI大数据</option>
+            <option>AI嵌入式</option>
+            <option>AI测试</option>
+            <option>AI运维</option>
+        </select>
+
+        <label>课程名称:</label>
+        <input type="text" placeholder="请输入姓名">
+
+        <label>适用人群:</label>
+        <select>
+            <option value="">请选择</option>
+            <option>小白学员</option>
+            <option>初级程序员</option>
+            <option>中级程序员</option>
+        </select>
+
+        <button class="btn-query">查询</button>
+        <button class="btn-reset">清空</button>
+    </div>
+
+    <!-- 课程数据表格 -->
+    <table>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>课程学科</th>
+                <th>课程名称</th>
+                <th>价格(元)</th>
+                <th>适用人群</th>
+                <th>课程介绍</th>
+                <th>更新时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>AI智能体项目-天机AI助理</td>
+                <td>4999</td>
+                <td>中级程序员</td>
+                <td>AI智能体项目-天机AI助理</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>微服务智能项目集</td>
+                <td>1999</td>
+                <td>中级程序员</td>
+                <td>微服务智能项目集</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>SpringCloud微服务框架</td>
+                <td>1200</td>
+                <td>初级程序员</td>
+                <td>SpringCloud微服务框架及分布式解决方案</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>RAG增强检索</td>
+                <td>999</td>
+                <td>初级程序员</td>
+                <td>RAG</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>LangChain4j</td>
+                <td>1389</td>
+                <td>初级程序员</td>
+                <td>LangChain4j从入门到进阶,适合AI初学者</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>AI大模型开发(Python)</td>
+                <td>LangChain入门</td>
+                <td>199</td>
+                <td>初级程序员</td>
+                <td>LangChain入门，学习该框架如何操作AI大模型</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>Java核心与AI开发基础</td>
+                <td>28</td>
+                <td>初级程序员</td>
+                <td>Java核心与AI开发基础</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>AI鸿蒙开发</td>
+                <td>前端基础</td>
+                <td>28</td>
+                <td>小白学员</td>
+                <td>前端基础，主要讲解HTML、CSS、JS等</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>AI大模型开发(Python)</td>
+                <td>数据分析</td>
+                <td>599</td>
+                <td>小白学员</td>
+                <td>基于Python数据分析的</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>AI智能应用开发(Java)</td>
+                <td>SpringAI大模型应用开发</td>
+                <td>1990</td>
+                <td>初级程序员</td>
+                <td>SpringAI大模型应用开发</td>
+                <td>2025-07-10 12:05:30</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

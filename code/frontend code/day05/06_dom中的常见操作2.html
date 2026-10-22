@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+  我是一个div
+</div>
+<div>
+  我是第二个div
+</div>
+<div>
+  我是第三个div
+</div>
+<div>
+  我是第四个div
+</div>
+<div>
+  我是第五个div
+</div>
+<div>
+  我是第六个div
+</div>
+<input type="text" placeholder="请输入姓名" value="张三">
+</body>
+<script>
+  ////遍历每一个div元素对象，并且对属性进行修改
+  let divs = document.querySelectorAll("div")
+  divs.forEach(
+    (div) =>{
+      div.innerHTML += "!!!"
+    } 
+  )
+  //注意单标签没有innerHTML属性
+  let input = document.querySelector("input")
+  // input.value = "李四"    这里就是一个典型错误，input属于单标签没有innerHTML属性，所以不能这样修改
+  input.value = "李四"
+  
+</script>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+     //生成一个纯数字数组
+    let arr = [1,2,3,4,5,6,7,8,9,10]
+    arr.forEach(function(item,index){
+      document.write(item)
+      document.write(index)
+    })
+    document.write('<hr>')
+    arr.forEach(
+      (item,index)=>{
+        document.write(item)
+        document.write(index)
+      }
+    )
+    
+// 给定数组：let arr = [10,20,30,20,50,10,60,30,70] 需求：删除数组里面所有重复数字，只保留第一次出现的元素，最后输出去重后的数组。 要求：
+// 1. 只能用循环 + splice实现
+// 2. 注意：删除元素后数组长度、索引会变化，要处理循环下标问题 输出最终去重后的数组。
+
+  </script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script>
+  //定义一个学生对象，有属性若干，方法若干
+  let stu = {
+    name:'张三',
+    age:18,
+    sex:'男',
+    //学习方法
+    study:function(){
+      document.write('我在学习')
+    },
+    eat:function(){
+      document.write('我在吃')
+    },
+    //睡觉方法，方法的另一种写法，参考在js中的函数写法
+    sleep:()=>{
+      document.write('我在睡觉')
+    }
+  }
+  //调用对象的方法
+  stu.study()
+  stu.eat()
+  stu.sleep()
+</script>
+</html>

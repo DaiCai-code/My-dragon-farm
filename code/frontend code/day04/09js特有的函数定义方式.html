@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js特有的函数定义方式</title>
+</head>
+<body>
+  
+</body>
+<script>
+  let getMax = (num1,num2) => {
+    return num1 > num2 ? num1 : num2
+  }
+  let max = getMax(10,20)
+  let max2 = getMax(30,40)
+  let max3 = getMax(50,60)
+  document.write(max)//20
+  document.write(max2)//40
+  document.write(max3)//60  
+</script>
+</html>

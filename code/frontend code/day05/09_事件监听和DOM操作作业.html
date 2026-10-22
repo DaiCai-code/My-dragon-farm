@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作业 - 事件监听和DOM操作</title>
+  <style>
+    /* 4 组并排，和需求图一样 */
+    .wrap {
+      display: flex;
+      gap: 40px;
+      padding: 20px;
+    }
+
+    /* 每一组内部纵向排列 */
+    .group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    img {
+      width: 120px;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- ================= 第 1 组 ================= -->
+    <div class="group">
+      <!-- 需求1：灯泡 点亮 / 熄灭 -->
+      <img src="./img/off.gif" alt="灯泡">
+      <p>
+        <button class="btn-on">点亮</button>
+        <button class="btn-off">熄灭</button>
+      </p>
+
+      <!-- 需求2：输入框 聚焦小写 / 离焦大写 -->
+      <p>
+        <input type="text" value="ITCAST">
+      </p>
+
+      <!-- 需求3：复选框 全选 / 反选(取消勾选) -->
+      <p>
+        <label><input type="checkbox"> 电影</label>
+        <label><input type="checkbox"> 旅游</label>
+        <label><input type="checkbox"> 游戏</label>
+      </p>
+      <p>
+        <button class="btn-all">全选</button>
+        <button class="btn-none">反选</button>
+      </p>
+    </div>
+
+    <!-- ================= 第 2 组 ================= -->
+    <div class="group">
+      <img src="./img/off.gif" alt="灯泡">
+      <p>
+        <button class="btn-on">点亮</button>
+        <button class="btn-off">熄灭</button>
+      </p>
+      <p>
+        <input type="text" value="ITCAST">
+      </p>
+      <p>
+        <label><input type="checkbox"> 电影</label>
+        <label><input type="checkbox"> 旅游</label>
+        <label><input type="checkbox"> 游戏</label>
+      </p>
+      <p>
+        <button class="btn-all">全选</button>
+        <button class="btn-none">反选</button>
+      </p>
+    </div>
+
+    <!-- ================= 第 3 组 ================= -->
+    <div class="group">
+      <img src="./img/off.gif" alt="灯泡">
+      <p>
+        <button class="btn-on">点亮</button>
+        <button class="btn-off">熄灭</button>
+      </p>
+      <p>
+        <input type="text" value="ITCAST">
+      </p>
+      <p>
+        <label><input type="checkbox"> 电影</label>
+        <label><input type="checkbox"> 旅游</label>
+        <label><input type="checkbox"> 游戏</label>
+      </p>
+      <p>
+        <button class="btn-all">全选</button>
+        <button class="btn-none">反选</button>
+      </p>
+    </div>
+
+    <!-- ================= 第 4 组 ================= -->
+    <div class="group">
+      <img src="./img/off.gif" alt="灯泡">
+      <p>
+        <button class="btn-on">点亮</button>
+        <button class="btn-off">熄灭</button>
+      </p>
+      <p>
+        <input type="text" value="ITCAST">
+      </p>
+      <p>
+        <label><input type="checkbox"> 电影</label>
+        <label><input type="checkbox"> 旅游</label>
+        <label><input type="checkbox"> 游戏</label>
+      </p>
+      <p>
+        <button class="btn-all">全选</button>
+        <button class="btn-none">反选</button>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // 拿到页面上的 4 组
+    const groups = document.querySelectorAll('.group')
+
+    // 遍历每一组，在"组内"查找元素并注册事件
+    // 关键：用 group.querySelector，作用范围就被限制在当前这一组里，4 组互不干扰
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i]
+
+      // ======== 需求1：灯泡 点亮 / 熄灭 ========
+      const light = group.querySelector('img')
+
+      group.querySelector('.btn-on').addEventListener('click', function () {
+        light.src = './img/on.gif'    // 点亮：换成亮的图
+      })
+
+      group.querySelector('.btn-off').addEventListener('click', function () {
+        light.src = './img/off.gif'   // 熄灭：换成灭的图
+      })
+
+      // ======== 需求2：输入框 聚焦小写 / 离焦大写 ========
+      const txt = group.querySelector('input[type="text"]')
+
+      txt.addEventListener('focus', function () {
+        txt.value = txt.value.toLowerCase()   // 聚焦：转小写
+      })
+
+      txt.addEventListener('blur', function () {
+        txt.value = txt.value.toUpperCase()   // 离焦：转大写
+      })
+
+      // ======== 需求3：复选框 全选 / 反选(取消勾选) ========
+      const checks = group.querySelectorAll('input[type="checkbox"]')
+
+      // 全选：把本组每个复选框的 checked 设为 true
+      group.querySelector('.btn-all').addEventListener('click', function () {
+        for (let j = 0; j < checks.length; j++) {
+          checks[j].checked = true
+        }
+      })
+
+      // 反选：按题目要求是"取消勾选"，即把本组每个复选框的 checked 设为 false
+      group.querySelector('.btn-none').addEventListener('click', function () {
+        for (let j = 0; j < checks.length; j++) {
+          checks[j].checked = false
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

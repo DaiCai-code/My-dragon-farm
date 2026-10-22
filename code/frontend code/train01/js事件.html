@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS-事件</title>
+  </head>
+
+  <body>
+    <input type="button" id="btn1" value="点我一下试试1">
+    <input type="button" id="btn2" value="点我一下试试2">
+
+    <script>
+      // let btn1 = document.querySelector('#btn1')
+      // btn1.addEventListener('click',()=>{
+      //   alert("试试就试试，谁怕谁")
+      //   let val = btn1.attributes[2]
+      //   val.value = '点点你'
+      //   alert(val.value)
+      // })
+      document.querySelector('#btn2').addEventListener('click',()=>{
+        alert("按钮2被点击了！")
+      })
+      document.querySelector('#btn1').onclick = ()=>{
+        alert("按钮1被点击了！")
+      } 
+      
+    </script>
+  </body>
+</html>

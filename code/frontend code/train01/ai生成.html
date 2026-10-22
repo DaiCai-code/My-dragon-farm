@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>注册新用户</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        .register-box {
+            width: 98%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+        .register-header {
+            background-color: #eee;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+        }
+        .login-link {
+            font-size: 18px;
+        }
+        .login-link a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .form-wrap {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .form-item {
+            display: flex;
+            align-items: center;
+            gap:10px;
+        }
+        .form-item label {
+            width: 100px;
+            text-align: right;
+            font-size:18px;
+        }
+        .form-item input[type="text"],
+        .form-item input[type="email"],
+        .form-item input[type="password"] {
+            width: 280px;
+            padding:10px;
+            font-size:16px;
+            border:1px solid #999;
+        }
+        .agree-line {
+            margin-top:10px;
+            display:flex;
+            align-items:center;
+            gap:5px;
+        }
+        .submit-btn {
+            width:280px;
+            padding:10px;
+            font-size:18px;
+            background-color:#eee;
+            border:1px solid #ddd;
+            color:#999;
+            cursor: not-allowed;
+        }
+        /* 启用状态：红色 rgb(190, 27, 37)，文字白色 */
+        .submit-btn.active {
+            background-color: rgb(190, 27, 37);
+            color:#ffffff;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="register-box">
+    <div class="register-header">
+        <div>注册新用户</div>
+        <div class="login-link">我有账号，<a href="#">去登陆</a></div>
+    </div>
+    <div class="form-wrap">
+        <div class="form-item">
+            <label>用户名:</label>
+            <input type="text" placeholder="用户名">
+        </div>
+        <div class="form-item">
+            <label>邮箱:</label>
+            <input type="email" placeholder="邮箱">
+        </div>
+        <div class="form-item">
+            <label>登录密码:</label>
+            <input type="password" placeholder="设置登录密码">
+        </div>
+        <div class="form-item">
+            <label>确认密码:</label>
+            <input type="password" placeholder="再次确认密码">
+        </div>
+        <div class="agree-line">
+            <input type="checkbox" id="agreeCheck">
+            <label for="agreeCheck">同意协议并注册《品优购用户协议》</label>
+        </div>
+        <button class="submit-btn" id="regBtn" disabled>完成注册</button>
+    </div>
+</div>
+<script>
+    // 获取复选框和注册按钮
+    const agreeCheck = document.getElementById('agreeCheck');
+    const regBtn = document.getElementById('regBtn');
+
+    // 监听复选框变化
+    agreeCheck.addEventListener('change', function(){
+        if(this.checked){
+            regBtn.disabled = false;
+            regBtn.classList.add('active');
+        }else{
+            regBtn.disabled = true;
+            regBtn.classList.remove('active');
+        }
+    })
+</script>
+</body>
+</html>

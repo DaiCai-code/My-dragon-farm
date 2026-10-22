@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+<div>
+  我是一个div
+</div>
+<div>
+  我是第二个div
+</div>
+<div>
+  我是第三个div
+</div>
+<div>
+  我是第四个div
+</div>
+<div>
+  我是第五个div
+</div>
+<div>
+  我是第六个div
+</div>
+</body>
+<script>
+  document.write('<hr>')
+  //获取一个元素
+  let div = document.querySelector('div')
+  document.write(div.innerHTML+ "<br>")
+  document.write('<hr>')
+  //获取全部div，注意返回的是数组
+  let divs = document.querySelectorAll('div')
+  divs.forEach(
+    (div)=>{
+      document.write(div.innerHTML + "<br>")
+    }
+  )
+</script>
+</html> 

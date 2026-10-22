@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tlias智能学习辅助系统</title>
+    <style>
+        /* 全局样式重置，清除默认内外边距 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            /* 清除body默认边距 */
+            margin: 0;
+        }
+        /* 页面容器：整体宽度占屏幕80%，水平居中 */
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        /* 顶栏样式 */
+        .header {
+            /* 背景色浅灰色 #aaaaaa */
+            background-color: #aaaaaa;
+            /* 使用弹性布局，实现左右两端对齐 */
+            display: flex;
+            justify-content: space-between;
+            /* 垂直居中 */
+            align-items: center;
+            /* 上下内边距，撑开顶栏高度 */
+            padding: 16px 20px;
+        }
+        /* 顶栏左侧标题 */
+        .header-title {
+            /* 楷体字体 */
+            font-family: "KaiTi", "楷体", serif;
+            /* 字体加大加粗 */
+            font-size: 24px;
+            font-weight: bold;
+            /* 文字白色 */
+            color: #ffffff;
+        }
+        /* 顶栏右侧退出登录链接 */
+        .header-logout {
+            /* 文字白色 */
+            color: #ffffff;
+            /* 取消a标签默认下划线 */
+            text-decoration: none;
+            font-size: 16px;
+        }
+        /* 鼠标悬浮退出链接，增加下划线效果 */
+        .header-logout:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== 第二部分：搜索表单区域 ========== */
+        .search-form {
+            /* 弹性布局，所有表单项水平排在一行 */
+            display: flex;
+            align-items: center;
+            gap: 16px; /* 元素之间间距 */
+            padding: 20px;
+            border: 1px solid #eee;
+            margin-top: 10px;
+        }
+        /* 表单项容器：姓名、性别、职位三个平分剩余空间 */
+        .form-item {
+            flex: 1; /* 三个表单项均分剩余宽度 */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        /* 标签文字 */
+        .form-item label {
+            white-space: nowrap; /* 文字不换行 */
+        }
+        /* 输入框和下拉选择框统一样式 */
+        .form-item input,
+        .form-item select {
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        /* 按钮组容器，固定在最右侧，不参与均分 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0; /* 禁止按钮组被压缩 */
+        }
+        /* 查询按钮样式：蓝色背景，白色文字 */
+        .btn-search {
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        /* 清空按钮样式：浅灰背景，白色文字 */
+        .btn-reset {
+            background-color: #aaaaaa;
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* ========== 第三部分：表格展示区域 ========== */
+        .table-wrap {
+            margin-top: 12px;
+        }
+        /* 表格样式，宽度100%，合并边框 */
+        .staff-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        /* 表头样式 */
+        .staff-table th {
+            background-color: #f5f5f5;
+            padding: 12px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        /* 表格单元格样式 */
+        .staff-table td {
+            padding: 10px 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        /* 鼠标悬浮行高亮 */
+        .staff-table tbody tr:hover {
+            background-color: #fafafa;
+        }
+        /* 头像小图片样式 */
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        /* 操作按钮：无背景，金色字体 */
+        .operate-btn {
+            background: transparent;
+            border: none;
+            color: goldenrod;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0 4px;
+        }
+        .operate-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== 第四部分：页脚版权区域 ========== */
+        .footer {
+            /* 浅灰色背景，和顶栏保持一致 */
+            background-color: #aaaaaa;
+            /* 文字居中 */
+            text-align: center;
+            /* 白色字体 */
+            color: #ffffff;
+            /* 上下内边距，撑开高度 */
+            padding: 20px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+        /* 第一行公司名称，增加一点底部间距 */
+        .footer-company {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面总容器，宽度80%居中 -->
+    <div class="container">
+        <!-- 顶栏部分 -->
+        <div class="header">
+            <div class="header-title">Tlias智能学习辅助系统</div>
+            <a href="#" class="header-logout">退出登录</a>
+        </div>
+
+        <!-- 第二部分：搜索表单区域 -->
+        <div class="search-form">
+            <!-- 姓名 -->
+            <div class="form-item">
+                <label>姓名：</label>
+                <input type="text" name="name">
+            </div>
+            <!-- 性别下拉框，默认空 -->
+            <div class="form-item">
+                <label>性别：</label>
+                <select name="gender">
+                    <option value=""></option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <!-- 职位下拉框，默认空 -->
+            <div class="form-item">
+                <label>职位：</label>
+                <select name="job">
+                    <option value=""></option>
+                    <option value="班主任">班主任</option>
+                    <option value="讲师">讲师</option>
+                    <option value="学工主管">学工主管</option>
+                    <option value="教研主管">教研主管</option>
+                    <option value="咨询师">咨询师</option>
+                </select>
+            </div>
+            <!-- 按钮组，固定在最右侧 -->
+            <div class="btn-group">
+                <button class="btn-search">查询</button>
+                <button class="btn-reset">清空</button>
+            </div>
+        </div>
+
+        <!-- 第三部分：表格展示区 -->
+        <div class="table-wrap">
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>头像</th>
+                        <th>职位</th>
+                        <th>入职日期</th>
+                        <th>最后操作时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>令狐冲</td>
+                        <td>男</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1005/36/36" alt="头像"></td>
+                        <td>讲师</td>
+                        <td>2023-01-12</td>
+                        <td>2026-05-20 14:30:22</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>任盈盈</td>
+                        <td>女</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1011/36/36" alt="头像"></td>
+                        <td>班主任</td>
+                        <td>2023-02-18</td>
+                        <td>2026-05-18 09:12:45</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>岳不群</td>
+                        <td>男</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1025/36/36" alt="头像"></td>
+                        <td>教研主管</td>
+                        <td>2022-11-05</td>
+                        <td>2026-04-30 16:20:10</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>岳灵珊</td>
+                        <td>女</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1027/36/36" alt="头像"></td>
+                        <td>咨询师</td>
+                        <td>2024-03-22</td>
+                        <td>2026-05-22 11:05:33</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>林平之</td>
+                        <td>男</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1074/36/36" alt="头像"></td>
+                        <td>讲师</td>
+                        <td>2023-08-14</td>
+                        <td>2026-05-10 08:44:19</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>左冷禅</td>
+                        <td>男</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1062/36/36" alt="头像"></td>
+                        <td>学工主管</td>
+                        <td>2022-07-30</td>
+                        <td>2026-05-15 17:51:06</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>仪琳</td>
+                        <td>女</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1060/36/36" alt="头像"></td>
+                        <td>班主任</td>
+                        <td>2024-01-09</td>
+                        <td>2026-05-21 10:22:47</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>田伯光</td>
+                        <td>男</td>
+                        <td><img class="avatar" src="https://picsum.photos/id/1077/36/36" alt="头像"></td>
+                        <td>咨询师</td>
+                        <td>2023-05-26</td>
+                        <td>2026-05-19 15:36:28</td>
+                        <td>
+                            <button class="operate-btn">编辑</button>
+                            <button class="operate-btn">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 第四部分：页脚版权区域 -->
+        <div class="footer">
+            <div class="footer-company">江苏传智播客教育科技股份有限公司</div>
+            <div>版权所有 Copyright 2006-2024 All Rights Reserved</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>新鲜好物</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        .container {
+            width: 96%;
+            margin: 40px auto;
+        }
+        /* 头部标题区域 */
+        .goods-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom:24px;
+        }
+        .title-left h2 {
+            font-size: 42px;
+            color: #222;
+        }
+        .title-left p {
+            font-size:20px;
+            color:#888;
+            margin-top:6px;
+        }
+        .more-link {
+            font-size:20px;
+            color:#999;
+            text-decoration:none;
+        }
+        /* 商品卡片容器 */
+        .goods-wrap {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap:12px;
+        }
+        /* 单个商品卡片 */
+        .goods-item {
+            background-color: #f0faf4;
+            overflow:hidden;
+        }
+        .goods-img {
+            width:100%;
+            display:block;
+        }
+        .goods-info {
+            padding:18px 16px;
+        }
+        .goods-name {
+            font-size:24px;
+            color:#222;
+            margin-bottom:14px;
+            line-height:1.4;
+        }
+        .goods-price {
+            font-size:28px;
+            color:#d92121;
+            font-weight:500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--标题区域-->
+        <div class="goods-header">
+            <div class="title-left">
+                <h2>新鲜好物</h2>
+                <p>新鲜出炉 品质靠谱</p>
+            </div>
+            <a href="#" class="more-link">查看全部 ></a>
+        </div>
+
+        <!--商品列表-->
+        <div class="goods-wrap">
+            <!--商品1-->
+            <div class="goods-item">
+                <img class="goods-img" src="https://img1.baidu.com/it/u=3064023211,1180111145&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500" alt="登山鞋">
+                <div class="goods-info">
+                    <div class="goods-name">全防水HABU旋钮牛皮…</div>
+                    <div class="goods-price">¥444.00</div>
+                </div>
+            </div>
+            <!--商品2-->
+            <div class="goods-item">
+                <img class="goods-img" src="https://img0.baidu.com/it/u=2289121400,3112014101&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=500" alt="儿童短袖">
+                <div class="goods-info">
+                    <div class="goods-name">儿童多色圆领印花短袖…</div>
+                    <div class="goods-price">¥59.00</div>
+                </div>
+            </div>
+            <!--商品3-->
+            <div class="goods-item">
+                <img class="goods-img" src="https://img2.baidu.com/it/u=3831102184,1221212413&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500" alt="汝瓷酒具">
+                <div class="goods-info">
+                    <div class="goods-name">古法温酒汝瓷酒具套装…</div>
+                    <div class="goods-price">¥488.00</div>
+                </div>
+            </div>
+            <!--商品4-->
+            <div class="goods-item">
+                <img class="goods-img" src="https://img2.baidu.com/it/u=1722003118,2722214240&fm=253&fmt=auto&app=120&f=JPEG?w=800&h=500" alt="儿童套装">
+                <div class="goods-info">
+                    <div class="goods-name">2021年春季新品，儿童…</div>
+                    <div class="goods-price">¥59.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
