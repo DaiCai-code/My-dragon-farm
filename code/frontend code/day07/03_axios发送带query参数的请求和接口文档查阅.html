@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!--1. 必须先导入axios的js文件    （这个你最好从官网上自己去取）-->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    //get请求参数携带问题 ===》get的参数一般使用？参数名=参数值&参数名=参数值......
+    //附属：接口文档的查阅能力：https://s.apifox.cn/apidoc/docs-site/1937884/doc-1695440
+    axios.get("https://hmajax.itheima.net/api/city?pname=河南省").then(
+      resp => {
+        console.log(resp.data);
+      }
+    )
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  请输入省份名字：<input id = "pname">
+  请输入城市名字：<input id = "cname">
+  <button>查询</button>
+  <!--1. 导入axios的js文件-->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    let searchBtn = document.querySelector("button");
+    let pname = document.querySelector("#pname");
+    let cname = document.querySelector("#cname");
+    searchBtn.addEventListener(
+      "click",
+      () => {
+        //注意这里使用了反引号${}的模板字符串
+        axios.get(`https://hmajax.itheima.net/api/area?pname=${pname.value}&cname=${cname.value}` ).then(
+          resp => {
+            console.log(resp.data);
+          }
+        )
+      }
+    )
+  </script>
+</body>
+</html>
