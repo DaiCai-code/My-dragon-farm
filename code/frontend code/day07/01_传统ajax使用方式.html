@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    //1.创建异步发送请求对象
+    let xhr = new XMLHttpRequest();
+    //2.打开链接发送请求
+    xhr.open("GET", "https://hmajax.itheima.net/api/province", true);
+    xhr.send();
+    //3.监听状态为4的时候，响应已经完成的时候拿结果responseText
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.write(this.responseText);
+        console.log(this.responseText);
+      }
+    }
+  </script>
+</body>
+
+</html>
