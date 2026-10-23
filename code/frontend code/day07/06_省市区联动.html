@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取省市信息</title>
+    <link rel="stylesheet" href="./lib/css/bootstrap.min.css">
+    <style>
+        button {
+            width: 80px;
+            height: 40px;
+        }
+
+        .form-select {
+            width: 150px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="input-group mb-3">
+            <label class="input-group-text"> <button>籍贯:</button></label>
+            <select class="form-select" id="province">
+                <option selected>请选择省份</option>
+            </select>
+            <select class="form-select" id="city">
+                <option selected>请选择城市</option>
+            </select>
+
+            <select class="form-select" id="area">
+                <option selected>请选择区县</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 导入axios的js文件 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        //找到省份的下拉框，以备给其设置内容
+        let provinceSelect = document.querySelector("#province");
+        //找到城市下拉框，以备给其设置内容
+        let citySelect = document.querySelector("#city");
+        //找到区县下拉框，以备给其设置内容
+        let areaSelect = document.querySelector("#area");
+
+        axios.get("https://hmajax.itheima.net/api/province").then(
+            resp => {
+                console.log(resp.data.list)
+                let provinceContent = '<option selected>请选择省份</option>'
+                //遍历数组, 组织成<option></option>弄到一个内容
+                resp.data.list.forEach(
+                    pro => {
+                        provinceContent += `<option>${pro}</option>`
+                    }
+                )
+                //将内容插入到省份下拉框中
+                provinceSelect.innerHTML = provinceContent;
+            }
+        )
+        
+        //设置事件，当省份框有内容变化的时候事件发生
+        provinceSelect.addEventListener("change", function () {
+            areaSelect.innerHTML = '<option selected>请选择区县</option>'
+            //获取当前选中的省份值      这里this.value就是provinceSelect.value
+            let province = this.value;
+            console.log(province);
+            //找到城市下拉框，给其设置内容
+            let citySelect = document.querySelector("#city");
+            //根据省份获取城市
+            axios.get(`https://hmajax.itheima.net/api/city?pname=${province}`).then(
+                resp => {
+                    console.log(resp.data.list);
+                    //给城市下拉框设置默认值
+                    let cityContent = '<option selected>请选择城市</option>'
+                    //遍历数组, 组织成<option></option>弄到一个内容
+                    resp.data.list.forEach(
+                        city => {
+                            cityContent += `<option>${city}</option>`
+                        }
+                    )
+                    //将内容插入到城市下拉框中
+                    citySelect.innerHTML = cityContent;
+                }
+            )
+        })
+
+        //设置事件，当城市框有内容变化的时候事件发生
+        citySelect.addEventListener("change", function () {
+            //获取当前选中的城市值      这里this.value就是citySelect.value
+            let city = this.value;
+            let province = provinceSelect.value;
+            console.log(city);
+            //根据城市获取区县
+            axios.get(`https://hmajax.itheima.net/api/area?pname=${province}&cname=${city}`).then(
+                resp => {
+                    console.log(resp.data.list);
+                    //给区县下拉框设置默认值
+                    let areaContent = '<option selected>请选择区县</option>'
+                    //遍历数组, 组织成<option></option>弄到一个内容
+                    resp.data.list.forEach(
+                        area => {
+                            areaContent += `<option>${area}</option>`
+                        }
+                    )
+                    //将内容插入到区县下拉框中
+                    areaSelect.innerHTML = areaContent;
+                }
+            )
+        })
+    </script>
+
+
+</body>
+
+</html>
