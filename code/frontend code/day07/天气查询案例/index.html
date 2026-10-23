@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气预报</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <style>
+
+        .list-style{
+            color : black
+        }
+        #city_notice_container{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 1、首行： 日历、定位、搜索框 -->
+        <!--text-light 白色字体 align-items-center内容垂直居中-->
+        <div class="row text-light align-items-center">
+            <div class="col-3" id="calander">02月05日 农历 正月十五</div>
+            <div class="col-2 offset-4 text-end"> <!-- text-end内容右对齐 -->
+                <img src="imgs/定位.png" width="20px" alt="">
+                <span id="area">北京市</span>
+            </div>
+            <div class="col-3 search-box">
+                <!-- rounded-pill 圆形边框，胶囊形状 border-0去掉边框 form-control-sm小输入框 search是自己加的样式-->
+                <input type="text" id="search-city"
+                    class="text-light form-control rounded-pill search border-0 form-control" placeholder="搜索城市">
+                <!-- invisible表示隐藏，visible表示显示-->
+                <ul class="list-group search-list" id="city_notice_container">
+                    <!-- <li class="list-group-item list-group-item-action">Cras justo odio</li> -->
+                </ul>
+            </div>
+        </div>
+        <!-- 2、中间气温、空气质量 -->
+        <div class="row text-light align-items-center mt-3">
+            <div class="col-2 temperature">1℃</div> <!-- temperature用于自定义样式 -->
+            <div class="col-10">
+                <!-- rounded圆角 ，air用于自定义样式-->
+                <div class="air rounded">70 良</div>
+                <div>
+                    <img id="weather-img" src="imgs/晴天-line.png" width="20px" alt="">
+                    <span id="weather-wind">晴 西北风 2级</span>
+                </div>
+            </div>
+        </div>
+        <!-- 3、当天天气详情 -->
+        <div class="row text-light align-items-center mt-3" id="today-weather">
+            <div class="col-3">今天：多云-4-8℃</div>
+            <div class="col-2">紫外线：中等</div>
+            <div class="col-2">湿度：31%</div>
+            <div class="col-2">日出：07:20</div>
+            <div class="col-3">日落：17:38</div>
+        </div>
+        <!-- 4、7日天气预报 -->
+        <!-- bg-white白色背景。rounded-3圆角，2表示角度大小。mt-3上外边距-->
+        <div class="row bg-white rounded-3 mt-4">
+            <div class="col-12">
+                <p class="fw-bold mt-2 ms-2">7日内天气预报</p>
+                <!-- d-flex justify-content-around 弹性布局 text-center内容居中-->
+                <div class="d-flex justify-content-around text-center" id="dayForecast">
+                    <div>
+                        <p>今天</p>
+                        <!-- text-muted灰色字体 -->
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                    <div>
+                        <p>今天</p>
+                        <p class="text-muted">02月05日</p>
+                        <div><img src="imgs/晴天.png" alt=""></div>
+                        <p>多云</p>
+                        <p>8-4℃</p>
+                        <p class="text-muted">北风&lt;3级</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        //-----------------------------需求：查询城市----------------------------------
+        let cities = []
+        axios.get('https://hmajax.itheima.net/api/weather/city?city=').then(resp => {
+            console.log(resp.data)
+            cities = resp.data.data;
+        })
+        //在输入框输入内容的时候, 展示所有的城市
+        let searchInput = document.querySelector("#search-city");
+        let cityNoticeContainer = document.querySelector("#city_notice_container");
+        searchInput.addEventListener("input", () => {
+            //显示输入框
+            cityNoticeContainer.style.display = "block";
+            //获取搜索框输入的内容
+            let search = searchInput.value;
+            //找到搜索框下面展示提示内容的区域
+            let cityContent = "";
+            cities.forEach(item => {
+                if (item.name.startsWith(search)) {
+                    cityContent += `<li class='list-style'>${item.name}<li>`
+                }
+            })
+            //将所有的li插入到cityNoticeContainer中即可
+            cityNoticeContainer.innerHTML = cityContent;
+        })
+
+
+
+        //-----------------------------需求：查询天气----------------------------------
+    </script>
+</body>
+
+</html>
