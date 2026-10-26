@@ -1,6 +1,6 @@
 package com.itElton.Polymorphism.TypeConversioninPolymorphism;
 
-public class PolymorphismDemo {
+public class Test {
     public static void main(String[] args) {
         Animal animal = new Dog();
         animal.eat();   //这没问题
