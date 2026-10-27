@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#0a0908" />
+    <title>灰烬狂奔 · 3D 跑酷</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%230a0908' stroke='%23c96445' stroke-width='3'/%3E%3Cpath d='M16 5L14 13L18 16L13 21L16 27' stroke='%238c3a24' stroke-width='2' fill='none'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Noto+Serif+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Three.js 画布容器 -->
+    <div id="game-container"></div>
+
+    <!-- 下层氛围：在界面之下，只做飘动的雾 -->
+    <div id="atmosphere" aria-hidden="true">
+      <div class="fx-fog fx-fog--a"></div>
+      <div class="fx-fog fx-fog--b"></div>
+    </div>
+
+    <!-- 全局调色：必须直接挂在 body 下，mix-blend-mode 才能吃到画布 -->
+    <div class="fx-grade" aria-hidden="true"></div>
+
+    <!-- 上层特效：盖在界面上，做扫描线 / 暗角 / 闪烁 -->
+    <div id="fx-top" aria-hidden="true">
+      <div class="fx-scanlines"></div>
+      <div class="fx-vignette"></div>
+      <div class="fx-flicker"></div>
+      <div class="fx-flash"></div>
+    </div>
+
+    <!-- 颗粒噪点：同样直接挂 body，才能和文字、画面混合 -->
+    <div class="fx-grain" aria-hidden="true"></div>
+
+    <!-- 游戏中的状态栏 -->
+    <div id="hud" class="hidden">
+      <div class="hud-item">
+        <span class="hud-label">距离</span>
+        <span class="hud-value"
+          ><span id="hud-distance">0</span><span class="hud-unit">M</span></span
+        >
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">遗物</span>
+        <span class="hud-value"><span id="hud-coins">0</span></span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">印记</span>
+        <span class="hud-value"><span id="hud-score">0</span></span>
+      </div>
+    </div>
+
+    <!-- 开始界面 -->
+    <div id="start-screen" class="screen">
+      <div class="screen-corners" aria-hidden="true"></div>
+      <div class="screen-inner">
+        <p class="status-line">
+          <span class="status-dot" aria-hidden="true"></span>ASHEN RUN — SECTOR 07
+        </p>
+        <h1 class="game-title" data-text="灰烬狂奔">灰烬狂奔</h1>
+        <p class="subtitle">雾里有东西在追你</p>
+
+        <div class="controls-card">
+          <div class="control-row">
+            <span class="keys"><kbd>←</kbd><kbd>→</kbd></span>
+            <span>左右换道</span>
+          </div>
+          <div class="control-row">
+            <span class="keys"><kbd>空格</kbd><kbd>↑</kbd></span>
+            <span>跳跃</span>
+          </div>
+          <div class="control-row">
+            <span class="keys"><kbd>↓</kbd></span>
+            <span>下滑</span>
+          </div>
+          <div class="control-row phone-only">
+            <span class="keys"><kbd>滑动</kbd></span>
+            <span>手机操作</span>
+          </div>
+        </div>
+
+        <button id="start-btn" class="primary-btn">进入迷雾</button>
+        <p class="tip">矮栏要跳，横杆要滑，石柱要换道</p>
+      </div>
+    </div>
+
+    <!-- 结算界面 -->
+    <div id="game-over-screen" class="screen hidden">
+      <div class="screen-corners" aria-hidden="true"></div>
+      <div class="screen-inner">
+        <p class="status-line status-line--danger">
+          <span class="status-dot" aria-hidden="true"></span>SIGNAL LOST
+        </p>
+        <h2 class="game-over-title" data-text="游戏结束">游戏结束</h2>
+
+        <div class="result-card">
+          <div class="result-row">
+            <span>本局印记</span><strong id="final-score">0</strong>
+          </div>
+          <div class="result-row">
+            <span>距离</span><strong id="final-distance">0 米</strong>
+          </div>
+          <div class="result-row">
+            <span>遗物</span><strong id="final-coins">0</strong>
+          </div>
+          <div class="result-row best">
+            <span>最高印记</span><strong id="best-score">0</strong>
+          </div>
+        </div>
+
+        <p id="new-record" class="new-record hidden">◈ 新纪录 ◈</p>
+        <button id="restart-btn" class="primary-btn">再次坠入</button>
+        <p class="tip">按 Enter 也可以重开</p>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5efe4">
+  <title>围棋启蒙 · 初学者教学棋</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">碁</span>
+      <div class="brand-text">
+        <h1>围棋启蒙</h1>
+        <p>从数气到围地，一步一步学会下围棋</p>
+      </div>
+    </div>
+
+    <nav class="tabs" aria-label="模式切换">
+      <button class="tab is-active" data-mode="play" type="button">对局</button>
+      <button class="tab" data-mode="classroom" type="button">规则小课堂</button>
+      <button class="tab" data-mode="level" type="button">新手关卡</button>
+    </nav>
+
+    <div class="settings">
+      <label class="field">
+        <span>棋盘</span>
+        <select id="board-size">
+          <option value="9" selected>9 路</option>
+          <option value="13">13 路</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>难度</span>
+        <select id="difficulty">
+          <option value="beginner" selected>入门</option>
+          <option value="intermediate">初级</option>
+          <option value="advanced">进阶</option>
+        </select>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="toggle-hints" checked>
+        <span>教学提示</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="toggle-territory">
+        <span>显示地域</span>
+      </label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="board-panel">
+      <div class="player-strip">
+        <div class="player player-white">
+          <span class="stone-dot white" aria-hidden="true"></span>
+          <span class="player-name">白棋 · AI</span>
+          <span class="player-caps" id="strip-white">提 0</span>
+        </div>
+        <div class="turn-badge" id="turn-badge">黑棋先行</div>
+        <div class="player player-black">
+          <span class="player-caps" id="strip-black">提 0</span>
+          <span class="player-name">黑棋 · 你</span>
+          <span class="stone-dot black" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="board-wrap" id="board-wrap">
+        <canvas id="board" aria-label="围棋棋盘"></canvas>
+      </div>
+
+      <div class="board-foot">
+        <span id="move-info">第 0 手 · 9 路 · 贴 6.5 目</span>
+        <span id="ko-info" class="ko-info"></span>
+      </div>
+
+      <div class="confirm-bar" id="confirm-bar" hidden>
+        <span id="confirm-text"></span>
+        <button class="btn primary" id="confirm-place" type="button">确认落子</button>
+        <button class="btn ghost" id="confirm-cancel" type="button">取消</button>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btn-undo" type="button">悔棋 <kbd>U</kbd></button>
+        <button class="btn" id="btn-pass" type="button">停一手 <kbd>P</kbd></button>
+        <button class="btn danger" id="btn-resign" type="button">认输</button>
+        <button class="btn" id="btn-restart" type="button">重新开始</button>
+        <button class="btn primary" id="btn-hint" type="button">提示 <kbd>H</kbd></button>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <section class="card status-card">
+        <h2>局面</h2>
+        <div class="turn-line" id="turn-line">轮到黑棋</div>
+        <div class="captures">
+          <span class="cap black" id="cap-black">黑提子 0</span>
+          <span class="cap white" id="cap-white">白提子 0</span>
+        </div>
+        <div class="ai-status" id="ai-status" hidden>
+          白棋思考中
+          <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        </div>
+      </section>
+
+      <section class="card coach-card">
+        <h2>教练提示</h2>
+        <p class="hover-info" id="hover-info">把鼠标移到交叉点上，看看会发生什么。</p>
+        <div class="atari-list" id="atari-list"></div>
+        <div class="recommend-box" id="recommend-box" hidden></div>
+      </section>
+
+      <section class="card goal-card" id="goal-card" hidden>
+        <h2>关卡</h2>
+        <div id="level-content"></div>
+      </section>
+
+      <section class="card learn-card">
+        <h2>学习路径</h2>
+        <ol class="path">
+          <li>认识气与提子</li>
+          <li>避开禁着点</li>
+          <li>理解打劫</li>
+          <li>学会围地数子</li>
+        </ol>
+        <button class="link-btn" id="btn-open-lessons" type="button">打开规则小课堂 →</button>
+        <p class="fine-print">本教学版采用简单打劫规则；终局按中国规则数子，盘上棋子默认视为活棋。</p>
+      </section>
+    </aside>
+  </main>
+
+  <div class="toast-root" id="toast-root" aria-live="polite"></div>
+  <div class="modal-root" id="modal-root" hidden></div>
+
+  <noscript>
+    <p class="noscript">这个围棋小游戏需要启用 JavaScript 才能运行。</p>
+  </noscript>
+
+  <script src="src/constants.js"></script>
+  <script src="src/rules.js"></script>
+  <script src="src/scoring.js"></script>
+  <script src="src/ai.js"></script>
+  <script src="src/lessons.js"></script>
+  <script src="src/levels.js"></script>
+  <script src="src/boardview.js"></script>
+  <script src="src/ui.js"></script>
+  <script src="src/game.js"></script>
+  <script src="src/app.js"></script>
+  <script src="src/main.js"></script>
+  <script src="src/selftest.js"></script>
+</body>
+</html>

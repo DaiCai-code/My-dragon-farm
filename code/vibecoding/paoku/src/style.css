@@ -1,0 +1,961 @@
+/* ============================================================
+   灰烬狂奔 · 暗黑惊悚主题
+   灰烬色阶 + 铁锈红 + 余烬橙，近黑底，几乎无彩色
+   ============================================================ */
+
+:root {
+  /* 灰烬色阶 */
+  --ash-950: #0a0908;
+  --ash-900: #100e0d;
+  --ash-800: #181513;
+  --ash-700: #241f1b;
+  --ash-600: #35302a;
+  --ash-500: #4d4740;
+  --ash-400: #6f675c;
+  --ash-300: #948b7d;
+  --ash-200: #b8b0a2;
+  --ash-100: #d2cabb;
+  --ash-050: #e7e1d4;
+
+  /* 强调色 */
+  --rust: #8c3a24;
+  --rust-bright: #c96445;
+  --rust-dim: #4a1c14;
+  --ember: #d98a4e;
+  --ember-hot: #f0b377;
+  --bone: #d2cabb;
+  --bone-dim: #a89f90;
+
+  /* 面板与描边 */
+  --panel: rgba(16, 14, 13, 0.88);
+  --panel-raised: rgba(42, 37, 32, 0.94);
+  --line: rgba(200, 189, 169, 0.14);
+  --line-rust: rgba(201, 100, 69, 0.35);
+
+  /* 字体：Special Elite 负责拉丁与数字，Noto Serif SC 负责中文 */
+  --font-display: "Special Elite", "Noto Serif SC", "Songti SC", "SimSun",
+    serif;
+  --font-body: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font-mono: "Special Elite", "Courier New", monospace;
+
+  /* 颗粒噪点：内联 SVG，无外部资源 */
+  --noise-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* 缺角尺寸 */
+  --cut: 9px;
+}
+
+/* ===== 基础 ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--ash-950);
+  color: var(--bone);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+#game-container {
+  position: fixed;
+  inset: 0;
+}
+
+#game-container canvas {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   氛围层
+   ============================================================ */
+
+/* 下层：飘动的雾，必须在界面之下，否则会糊住文字 */
+#atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fx-fog {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 140vmax;
+  height: 90vmax;
+  margin: -45vmax 0 0 -70vmax;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(176, 170, 158, 0.2) 0%,
+    rgba(110, 104, 94, 0.08) 48%,
+    transparent 72%
+  );
+  will-change: transform;
+}
+
+.fx-fog--a {
+  animation: fog-drift-a 38s ease-in-out infinite alternate;
+}
+
+.fx-fog--b {
+  opacity: 0.6;
+  animation: fog-drift-b 53s ease-in-out infinite alternate;
+}
+
+@keyframes fog-drift-a {
+  from {
+    transform: translate3d(-6%, 2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, -4%, 0) scale(1.18);
+  }
+}
+
+@keyframes fog-drift-b {
+  from {
+    transform: translate3d(7%, -3%, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(-5%, 5%, 0) scale(0.95);
+  }
+}
+
+/* 全局调色：直接挂在 body 下，mix-blend-mode 才能吃到画布 */
+.fx-grade {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(110, 104, 94, 0.1),
+    rgba(74, 28, 20, 0.12)
+  );
+  mix-blend-mode: color;
+  opacity: 0.55;
+}
+
+/* 上层：扫描线 / 暗角 / 闪烁，盖在界面之上 */
+#fx-top {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.fx-scanlines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.025) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+.fx-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 48%,
+    transparent 42%,
+    rgba(8, 7, 6, 0.55) 78%,
+    rgba(8, 7, 6, 0.92) 100%
+  );
+  animation: vignette-breathe 9s ease-in-out infinite alternate;
+}
+
+@keyframes vignette-breathe {
+  from {
+    opacity: 0.82;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 偶发的「信号掉线」：低频、稀疏、不刺眼 */
+.fx-flicker {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(217, 138, 78, 0.08),
+    transparent 35%,
+    transparent 65%,
+    rgba(74, 28, 20, 0.1)
+  );
+  animation: lamp-flicker 11s steps(1) infinite;
+}
+
+@keyframes lamp-flicker {
+  0%,
+  7%,
+  9%,
+  54%,
+  56%,
+  100% {
+    opacity: 0;
+  }
+  7.2%,
+  8.4%,
+  54.5% {
+    opacity: 0.55;
+  }
+  8%,
+  55% {
+    opacity: 0.15;
+  }
+}
+
+.fx-flash {
+  position: absolute;
+  inset: 0;
+  background: var(--rust);
+  opacity: 0;
+}
+
+/* 颗粒噪点：直接挂 body，才能和文字、画面混合 */
+.fx-grain {
+  position: fixed;
+  inset: -15%;
+  z-index: 41;
+  pointer-events: none;
+  background-image: var(--noise-img);
+  background-size: 160px 160px;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  animation: grain-shift 1.4s steps(5) infinite;
+  will-change: transform;
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-2%, 1%, 0);
+  }
+  40% {
+    transform: translate3d(1%, -2%, 0);
+  }
+  60% {
+    transform: translate3d(-1%, 2%, 0);
+  }
+  80% {
+    transform: translate3d(2%, -1%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+
+#hud {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.hud-item {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 14px;
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+  clip-path: polygon(
+    9px 0,
+    100% 0,
+    100% calc(100% - 9px),
+    calc(100% - 9px) 100%,
+    0 100%,
+    0 9px
+  );
+  box-shadow: inset 0 0 0 1px var(--line),
+    inset 0 -1px 0 rgba(201, 100, 69, 0.18);
+  animation: hud-in 0.45s ease both;
+}
+
+/* 细横纹，模拟旧金属 */
+.hud-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    rgba(0, 0, 0, 0.16) 2px 3px
+  );
+}
+
+@keyframes hud-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hud-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ash-200);
+}
+
+.hud-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+#hud-distance,
+#hud-coins,
+#hud-score {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--bone);
+  text-shadow: 0 0 10px rgba(217, 138, 78, 0.18);
+}
+
+.hud-unit {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ash-200);
+}
+
+/* ============================================================
+   全屏界面（开始 / 结算）
+   ============================================================ */
+
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 28px 24px;
+  text-align: center;
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    rgba(8, 7, 6, 0.58) 0%,
+    rgba(8, 7, 6, 0.8) 46%,
+    rgba(8, 7, 6, 0.94) 100%
+  );
+  animation: screen-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 四角细线框：纯装饰，带缺角 */
+.screen-corners {
+  position: absolute;
+  inset: 18px;
+  pointer-events: none;
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    22px 0,
+    100% 0,
+    100% calc(100% - 22px),
+    calc(100% - 22px) 100%,
+    0 100%,
+    0 22px
+  );
+}
+
+.screen-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: min(92vw, 560px);
+}
+
+/* ===== 状态标签 ===== */
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--ash-200);
+}
+
+.status-line--danger {
+  color: var(--rust-bright);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--ember);
+  box-shadow: 0 0 10px var(--ember);
+  animation: ember-flicker 5.5s steps(1) infinite;
+}
+
+@keyframes ember-flicker {
+  0%,
+  18%,
+  22%,
+  61%,
+  64%,
+  100% {
+    opacity: 1;
+  }
+  19%,
+  62% {
+    opacity: 0.35;
+  }
+  20%,
+  63% {
+    opacity: 0.75;
+  }
+}
+
+/* ===== 标题 ===== */
+.game-title,
+.game-over-title {
+  position: relative;
+  isolation: isolate;
+  font-family: var(--font-display);
+  line-height: 1.1;
+  color: var(--bone);
+  text-shadow: 0 1px 0 #000, 0 0 2px rgba(8, 7, 6, 0.9),
+    0 0 26px rgba(201, 100, 69, 0.22), 0 10px 34px rgba(0, 0, 0, 0.7);
+}
+
+.game-title {
+  font-size: clamp(46px, 10.5vw, 92px);
+  letter-spacing: 0.12em;
+  animation: title-flicker 9s steps(1) infinite;
+}
+
+.game-over-title {
+  font-size: clamp(34px, 7vw, 56px);
+  letter-spacing: 0.16em;
+}
+
+/* 故障复制层：极短窗口内的 RGB 错位 */
+.game-title::before,
+.game-title::after,
+.game-over-title::before,
+.game-over-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.game-title::before,
+.game-over-title::before {
+  color: var(--rust-bright);
+  mix-blend-mode: screen;
+  animation: glitch-a 7s steps(1) infinite;
+}
+
+.game-title::after,
+.game-over-title::after {
+  color: var(--bone-dim);
+  animation: glitch-b 8.5s steps(1) infinite;
+}
+
+@keyframes title-flicker {
+  0%,
+  71%,
+  72.5%,
+  74%,
+  100% {
+    opacity: 1;
+  }
+  71.2% {
+    opacity: 0.55;
+  }
+  73.2% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes glitch-a {
+  0%,
+  86.4%,
+  88.2%,
+  100% {
+    opacity: 0;
+    transform: none;
+    clip-path: inset(0 0 100% 0);
+  }
+  86.5% {
+    opacity: 0.75;
+    transform: translate(-3px, -1px);
+    clip-path: inset(12% 0 62% 0);
+  }
+  87.2% {
+    opacity: 0.55;
+    transform: translate(2px, 1px);
+    clip-path: inset(48% 0 30% 0);
+  }
+}
+
+@keyframes glitch-b {
+  0%,
+  47.3%,
+  48.3%,
+  100% {
+    opacity: 0;
+    transform: none;
+    clip-path: inset(0 0 100% 0);
+  }
+  47.4% {
+    opacity: 0.35;
+    transform: translate(2px, 1px);
+    clip-path: inset(62% 0 18% 0);
+  }
+}
+
+.subtitle {
+  font-size: 15px;
+  letter-spacing: 0.18em;
+  color: var(--ash-100);
+}
+
+/* ===== 操作说明 ===== */
+.controls-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 4px;
+  padding: 18px 26px;
+  background: linear-gradient(
+    155deg,
+    rgba(38, 33, 29, 0.94),
+    rgba(13, 11, 10, 0.96)
+  );
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+  box-shadow: inset 0 0 0 1px rgba(8, 7, 6, 0.75),
+    inset 0 0 30px rgba(0, 0, 0, 0.55);
+}
+
+/* 竖向细纹 */
+.controls-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 14px,
+    rgba(255, 255, 255, 0.012) 14px 15px
+  );
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--ash-100);
+}
+
+/* 行间虚线：隐藏的 .phone-only 也参与相邻选择器，不影响桌面布局 */
+.control-row + .control-row {
+  padding-top: 9px;
+  border-top: 1px dashed rgba(200, 189, 169, 0.08);
+}
+
+.keys {
+  display: flex;
+  gap: 6px;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 34px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ash-950);
+  background: linear-gradient(180deg, #cfc8bb, #8f887c);
+  border-radius: 3px;
+  box-shadow: 0 2px 0 #080706, inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.phone-only {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .phone-only {
+    display: flex;
+  }
+}
+
+/* ===== 按钮 ===== */
+/* 注意：不用 clip-path，否则会连焦点环一起裁掉 */
+.primary-btn {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+  padding: 14px 54px;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  color: var(--bone);
+  background: linear-gradient(180deg, #3a201a, #1a100d 60%, #140d0b);
+  border: 1px solid var(--line-rust);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(217, 138, 78, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, transform 0.1s,
+    box-shadow 0.2s;
+}
+
+/* 一次性锈光扫过 */
+.primary-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(217, 138, 78, 0.18),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.primary-btn:hover {
+  color: var(--ember-hot);
+  border-color: var(--rust-bright);
+  box-shadow: inset 0 0 22px rgba(201, 100, 69, 0.16),
+    0 0 24px rgba(201, 100, 69, 0.18), 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+.primary-btn:hover::after {
+  transform: translateX(100%);
+}
+
+.primary-btn:active {
+  transform: translateY(2px);
+}
+
+.primary-btn:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 4px;
+}
+
+/* ===== 结算 ===== */
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(88vw, 380px);
+  padding: 20px 26px;
+  background: linear-gradient(160deg, var(--panel-raised), var(--panel));
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+.result-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  font-size: 15px;
+  color: var(--ash-100);
+  border-bottom: 1px dashed rgba(200, 189, 169, 0.1);
+}
+
+.result-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.result-row strong {
+  font-family: var(--font-mono);
+  font-size: 23px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ember);
+}
+
+.result-row.best strong {
+  color: var(--bone);
+  text-shadow: 0 0 14px rgba(217, 138, 78, 0.25);
+}
+
+.new-record {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--rust-bright);
+  text-shadow: 0 0 16px rgba(201, 100, 69, 0.45);
+  animation: record-pulse 1.5s steps(2) infinite;
+}
+
+@keyframes record-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.tip {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ash-200);
+}
+
+/* ============================================================
+   状态驱动的氛围（由 UI.js 写入 body.dataset.state）
+   ============================================================ */
+
+body[data-state="playing"] .fx-fog {
+  opacity: 0.6;
+}
+
+body[data-state="over"] .fx-vignette {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    transparent 30%,
+    rgba(74, 28, 20, 0.35) 72%,
+    rgba(8, 7, 6, 0.96) 100%
+  );
+}
+
+body[data-state="over"] .fx-flash {
+  animation: crash-flash 0.28s ease-out 1 both;
+}
+
+@keyframes crash-flash {
+  0% {
+    opacity: 0.18;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+body[data-state="over"] #game-container {
+  animation: impact-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes impact-shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  12% {
+    transform: translate3d(-7px, 4px, 0);
+  }
+  28% {
+    transform: translate3d(6px, -3px, 0);
+  }
+  44% {
+    transform: translate3d(-4px, 2px, 0);
+  }
+  60% {
+    transform: translate3d(3px, -1px, 0);
+  }
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+
+@media (max-width: 520px) {
+  #hud {
+    gap: 6px;
+  }
+
+  .hud-item {
+    padding: 6px 10px;
+  }
+
+  .hud-label,
+  .hud-unit {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  #hud-distance,
+  #hud-coins,
+  #hud-score {
+    font-size: 16px;
+  }
+
+  .screen {
+    gap: 14px;
+    padding: 20px 16px;
+  }
+
+  .screen-corners {
+    inset: 10px;
+  }
+
+  .status-line {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+  }
+
+  .controls-card {
+    padding: 14px 18px;
+  }
+
+  .control-row {
+    font-size: 13px;
+  }
+
+  .primary-btn {
+    padding: 12px 38px;
+    font-size: 17px;
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+  }
+
+  /* 小屏摩尔纹太明显 */
+  .fx-scanlines {
+    display: none;
+  }
+}
+
+@media (max-height: 520px) {
+  .controls-card,
+  .subtitle,
+  .status-line,
+  .screen-corners {
+    display: none;
+  }
+}
+
+/* 触摸设备：砍掉最贵的合成层 */
+@media (pointer: coarse) {
+  .fx-grain {
+    animation: none;
+  }
+
+  .fx-fog--b {
+    display: none;
+  }
+
+  .fx-grade {
+    display: none;
+  }
+}
+
+/* ============================================================
+   降低动态效果
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-fog,
+  .fx-grain,
+  .fx-vignette,
+  .fx-flicker,
+  .status-dot,
+  .game-title,
+  .game-title::before,
+  .game-title::after,
+  .game-over-title::before,
+  .game-over-title::after,
+  .new-record,
+  #game-container,
+  .hud-item,
+  .screen {
+    animation: none !important;
+  }
+
+  .fx-flicker,
+  .fx-flash {
+    display: none !important;
+  }
+
+  .fx-grain {
+    opacity: 0.045;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
