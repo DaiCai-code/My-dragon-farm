@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#05060d" />
+    <title>霓虹蛇行 · 赛博贪吃蛇</title>
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2305060d'/%3E%3Cpath d='M6 24h8a4 4 0 0 0 0-8h-2a4 4 0 0 1 0-8h12' fill='none' stroke='%2300f0ff' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='26' cy='8' r='3' fill='%23ff2d95'/%3E%3C/svg%3E"
+    />
+
+    <!-- 字体：断网时自动降级到系统等宽字体，不影响玩法 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body data-state="ready">
+    <!-- ==================== 顶部状态栏 ==================== -->
+    <header id="hud">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span class="hud-value" id="hud-score">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LENGTH</span>
+        <span class="hud-value" id="hud-length">4</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SPEED</span>
+        <span class="hud-value" id="hud-speed">LV 1</span>
+      </div>
+      <div class="hud-item hud-item--best">
+        <span class="hud-label">BEST</span>
+        <span class="hud-value" id="hud-best">0</span>
+      </div>
+      <button id="btn-mute" class="icon-btn" type="button" aria-label="静音开关">
+        <span id="mute-icon">◤))</span>
+      </button>
+    </header>
+
+    <!-- ==================== 棋盘 ==================== -->
+    <main id="game-wrap">
+      <!-- 背景层：透视网格地平线 -->
+      <canvas id="bg" aria-hidden="true"></canvas>
+      <!-- 游戏层：蛇、数据点、粒子 -->
+      <canvas id="stage" aria-label="贪吃蛇棋盘"></canvas>
+
+      <!-- 连击徽章 -->
+      <div id="combo-badge" class="hidden"><span id="combo-value">×1</span></div>
+    </main>
+
+    <!-- ==================== 开始界面 ==================== -->
+    <div id="start-screen" class="screen">
+      <div class="screen-corners" aria-hidden="true"></div>
+      <div class="screen-inner">
+        <p class="status-line">
+          <span class="status-dot" aria-hidden="true"></span>SYSTEM READY // GRID 24×18
+        </p>
+        <h1 class="game-title glitch" data-text="NEON SERPENT">NEON SERPENT</h1>
+        <p class="title-cn">霓 虹 蛇 行</p>
+        <p class="subtitle">在数据洪流里吞噬光点，别撞上自己的轨迹</p>
+
+        <div class="controls-card">
+          <div class="control-row">
+            <span class="keys"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></span>
+            <span>转向</span>
+          </div>
+          <div class="control-row">
+            <span class="keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
+            <span>转向（备用键位）</span>
+          </div>
+          <div class="control-row">
+            <span class="keys"><kbd>P</kbd></span>
+            <span>暂停 / 继续</span>
+          </div>
+          <div class="control-row">
+            <span class="keys"><kbd>M</kbd></span>
+            <span>静音开关</span>
+          </div>
+          <div class="control-row phone-only">
+            <span class="keys"><kbd>滑动</kbd></span>
+            <span>手机转向</span>
+          </div>
+        </div>
+
+        <button id="start-btn" class="primary-btn" type="button">接 入 系 统</button>
+        <p class="tip">按 Enter 也可以直接开始</p>
+      </div>
+    </div>
+
+    <!-- ==================== 暂停界面 ==================== -->
+    <div id="pause-screen" class="screen hidden">
+      <div class="screen-inner">
+        <p class="status-line">
+          <span class="status-dot status-dot--warn" aria-hidden="true"></span>SUSPENDED
+        </p>
+        <h2 class="pause-title">信 号 挂 起</h2>
+        <p class="tip">按 P 或 Esc 继续</p>
+      </div>
+    </div>
+
+    <!-- ==================== 结算界面 ==================== -->
+    <div id="game-over-screen" class="screen hidden">
+      <div class="screen-corners" aria-hidden="true"></div>
+      <div class="screen-inner">
+        <p class="status-line status-line--danger">
+          <span class="status-dot status-dot--danger" aria-hidden="true"></span
+          ><span id="over-status-text">SIGNAL LOST</span>
+        </p>
+        <h2 class="game-over-title glitch" id="over-title" data-text="SIGNAL LOST">SIGNAL LOST</h2>
+        <p class="game-over-cn" id="over-reason">撞上了边界护栏</p>
+
+        <div class="result-card">
+          <div class="result-row">
+            <span>本局得分</span><strong id="final-score">0</strong>
+          </div>
+          <div class="result-row">
+            <span>蛇身长度</span><strong id="final-length">0</strong>
+          </div>
+          <div class="result-row">
+            <span>最高连击</span><strong id="final-combo">×1</strong>
+          </div>
+          <div class="result-row best">
+            <span>历史最高</span><strong id="final-best">0</strong>
+          </div>
+        </div>
+
+        <p id="new-record" class="new-record hidden">◈ NEW RECORD ◈</p>
+        <button id="restart-btn" class="primary-btn" type="button">重 新 接 入</button>
+        <p class="tip">按 Enter 也可以重开</p>
+      </div>
+    </div>
+
+    <!-- ==================== 全屏氛围层 ==================== -->
+    <!-- 调色层要直接挂在 body 下，mix-blend-mode 才吃得到画布 -->
+    <div class="fx-grade" aria-hidden="true"></div>
+
+    <div id="fx-top" aria-hidden="true">
+      <div class="fx-scanlines"></div>
+      <div class="fx-vignette"></div>
+      <div class="fx-flash"></div>
+    </div>
+
+    <!-- 颗粒噪点，同样挂 body，才能和文字混合 -->
+    <div class="fx-grain" aria-hidden="true"></div>
+
+    <noscript>
+      <p class="noscript">这个贪吃蛇小游戏需要启用 JavaScript 才能运行。</p>
+    </noscript>
+
+    <!-- 脚本：顺序不可乱（无构建，全局命名空间 SNAKE） -->
+    <script src="js/constants.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/game.js"></script>
+  </body>
+</html>

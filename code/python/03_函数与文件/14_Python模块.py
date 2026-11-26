@@ -34,4 +34,6 @@ print("结束")
 #
 # 模块的导入一般写在代码文件的开头位置
 
-
+from random import *
+for i in range(100):
+    print(randint(1, 100))

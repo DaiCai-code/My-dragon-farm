@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="问天 · 八字命理排盘与大运流年推演。所有计算在本地完成，生辰数据不出本机。">
+<title>问天 · 八字命理排盘</title>
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+
+<!-- ==================================================================
+     背景装饰：太极、祥云、回纹。纯装饰，aria-hidden
+     ================================================================== -->
+<div class="bg-deco" aria-hidden="true">
+  <svg class="deco-taiji" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="96" class="tj-ring"/>
+    <path d="M100 4a96 96 0 0 1 0 192 48 48 0 0 1 0-96 48 48 0 0 0 0-96z" class="tj-dark"/>
+    <circle cx="100" cy="52" r="12" class="tj-dot-light"/>
+    <circle cx="100" cy="148" r="12" class="tj-dot-dark"/>
+  </svg>
+  <svg class="deco-bagua" viewBox="0 0 400 400"></svg>
+  <div class="deco-grain"></div>
+</div>
+
+<!-- ==================================================================
+     页头
+     ================================================================== -->
+<header class="site-head">
+  <div class="brand">
+    <span class="seal-mark" aria-hidden="true">問</span>
+    <div class="brand-text">
+      <h1>问天</h1>
+      <p>八字排盘 · 大运流年推演</p>
+    </div>
+  </div>
+  <nav class="head-nav">
+    <button type="button" class="nav-link" id="btn-archives">
+      档案<span class="nav-count" id="archive-count">0</span>
+    </button>
+    <button type="button" class="nav-link" id="btn-help">凡例</button>
+  </nav>
+</header>
+
+<main class="app-main">
+
+  <!-- ================================================================
+       左栏：出生信息
+       ================================================================ -->
+  <section class="panel panel-input" aria-labelledby="input-title">
+    <div class="panel-head">
+      <h2 id="input-title">生辰录入</h2>
+      <span class="panel-hint">数据仅存于本机</span>
+    </div>
+
+    <form id="birth-form" autocomplete="off">
+
+      <!-- 称谓 -->
+      <div class="field">
+        <label for="f-name">称谓<span class="opt">选填</span></label>
+        <input type="text" id="f-name" maxlength="16" placeholder="如：本人 / 张三">
+      </div>
+
+      <!-- 历法 -->
+      <div class="field">
+        <label>历法</label>
+        <div class="segmented" role="radiogroup" aria-label="历法">
+          <button type="button" class="seg is-active" data-calendar="solar" role="radio" aria-checked="true">公历</button>
+          <button type="button" class="seg" data-calendar="lunar" role="radio" aria-checked="false">农历</button>
+        </div>
+      </div>
+
+      <!-- 年月日 -->
+      <div class="field">
+        <label for="f-year">出生日期 <em id="calendar-tip">（公历）</em></label>
+        <div class="date-row">
+          <input type="number" id="f-year" min="1900" max="2099" placeholder="年" inputmode="numeric" required>
+          <select id="f-month" aria-label="月"></select>
+          <select id="f-day" aria-label="日"></select>
+          <label class="leap-toggle" id="leap-wrap" hidden>
+            <input type="checkbox" id="f-leap">
+            <span>闰<em id="leap-month-name"></em>月</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 时辰 -->
+      <div class="field">
+        <label for="f-hour">出生时辰<span class="opt">选填</span></label>
+        <select id="f-hour"></select>
+      </div>
+
+      <!-- 性别 -->
+      <div class="field">
+        <label>性别<span class="opt">影响大运顺逆</span></label>
+        <div class="segmented" role="radiogroup" aria-label="性别">
+          <button type="button" class="seg is-active" data-gender="1" role="radio" aria-checked="true">男</button>
+          <button type="button" class="seg" data-gender="0" role="radio" aria-checked="false">女</button>
+        </div>
+      </div>
+
+      <!-- 出生地 -->
+      <div class="field">
+        <label>出生地<span class="opt">用于真太阳时</span></label>
+        <div class="place-row">
+          <select id="f-province" aria-label="省"></select>
+          <select id="f-city" aria-label="市"></select>
+        </div>
+      </div>
+
+      <!-- 高级选项 -->
+      <details class="advanced">
+        <summary>高级选项</summary>
+
+        <label class="check-line">
+          <input type="checkbox" id="f-truesolar">
+          <span>启用真太阳时修正<em>按出生地经度与均时差校正钟表时间</em></span>
+        </label>
+
+        <div class="field field-inline">
+          <label for="f-exact-h">精确时刻</label>
+          <span class="exact-time">
+            <input type="number" id="f-exact-h" min="0" max="23" placeholder="时" inputmode="numeric" aria-label="出生时">
+            <i>:</i>
+            <input type="number" id="f-exact-m" min="0" max="59" placeholder="分" inputmode="numeric" aria-label="出生分">
+          </span>
+        </div>
+        <p class="hint">填了按此刻精算起运与真太阳时；留空取所选时辰的中点（辰时按 08:00）。</p>
+
+        <div class="field field-inline">
+          <label for="f-sect">晚子时口径</label>
+          <select id="f-sect">
+            <option value="2" selected>23:00-23:59 算次日（通行）</option>
+            <option value="1">23:00-23:59 仍算当日</option>
+          </select>
+        </div>
+
+        <div class="notice" id="dst-notice" hidden></div>
+        <label class="check-line" id="dst-line" hidden>
+          <input type="checkbox" id="f-dst">
+          <span>按夏令时减 1 小时<em>仅在您填的是当年钟表读数时需要</em></span>
+        </label>
+      </details>
+
+      <button type="submit" class="btn-primary" id="btn-submit">
+        <span>起 局 排 盘</span>
+      </button>
+      <p class="form-error" id="form-error" role="alert"></p>
+    </form>
+
+    <!-- 档案 -->
+    <div class="archive-block">
+      <div class="archive-head">
+        <h3>生辰档案</h3>
+        <button type="button" class="btn-ghost btn-sm" id="btn-save" disabled>存为档案</button>
+      </div>
+      <ul class="archive-list" id="archive-list"></ul>
+      <p class="archive-empty" id="archive-empty">暂无档案。排完盘后可一键存档。</p>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       右栏：结果
+       ================================================================ -->
+  <section class="panel-results" id="results">
+
+    <!-- 空态 -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-ring" aria-hidden="true">
+        <span>甲</span><span>乙</span><span>丙</span><span>丁</span>
+        <span>子</span><span>丑</span><span>寅</span><span>卯</span>
+      </div>
+      <h2>填好生辰，起一局</h2>
+      <p>四柱、藏干、十神、旺衰用神、五行分布、大运时间轴，皆在本地推算。</p>
+    </div>
+
+    <!-- 排盘结果 -->
+    <div class="result-wrap" id="result-wrap" hidden>
+
+      <!-- 吸顶目录 -->
+      <nav class="report-toc" id="report-toc" aria-label="报告目录"></nav>
+
+      <!-- 命主概要 -->
+      <div class="card card-summary" id="card-summary"></div>
+
+      <!-- 四柱 -->
+      <div class="card" id="card-pillars">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">一</span>四柱排盘</h2>
+          <button type="button" class="btn-ghost btn-sm" id="btn-json">查看 JSON</button>
+        </div>
+        <div class="pillar-table" id="pillar-table"></div>
+        <div class="relation-list" id="relation-list"></div>
+      </div>
+
+      <!-- 日主与用神 -->
+      <div class="card" id="card-yongshen">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">二</span>日主旺衰与用神</h2>
+        </div>
+        <div id="yongshen-box"></div>
+      </div>
+
+      <!-- 图表 -->
+      <div class="card" id="card-charts">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">三</span>五行与生克</h2>
+        </div>
+        <div class="chart-grid">
+          <figure class="chart-box">
+            <div class="chart-canvas" id="chart-wuxing"></div>
+            <figcaption>五行力量占比（按月令加权）</figcaption>
+          </figure>
+          <figure class="chart-box">
+            <div class="chart-canvas" id="chart-relations"></div>
+            <div class="chart-legend">
+              <span><i class="lg lg-sheng"></i>相生</span>
+              <span><i class="lg lg-ke"></i>相克</span>
+              <span><i class="lg lg-he"></i>相合</span>
+              <span><i class="lg lg-xing"></i>刑害</span>
+            </div>
+            <figcaption>四柱干支生克与刑冲合害</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- 起运与大运 -->
+      <div class="card" id="card-dayun">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">四</span>起运与大运</h2>
+          <button type="button" class="btn-ghost btn-sm" id="btn-print">打印 / 存为 PDF</button>
+        </div>
+        <div id="overview-box"></div>
+        <div id="qiyun-box"></div>
+        <figure class="chart-box chart-box-wide">
+          <div class="chart-canvas" id="chart-timeline"></div>
+          <figcaption>五十年大运时间轴（金色为当前所行之运）</figcaption>
+        </figure>
+        <div class="dayun-list" id="dayun-list"></div>
+      </div>
+
+      <!-- 五、早年复盘 -->
+      <div class="card" id="card-early">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">五</span>早年复盘</h2>
+        </div>
+        <div id="early-box"></div>
+      </div>
+
+      <!-- 六、近十年详解 -->
+      <div class="card" id="card-decade">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">六</span>近十年详解</h2>
+        </div>
+        <div id="decade-box"></div>
+      </div>
+
+      <!-- 七、大运详解 -->
+      <div class="card" id="card-detail">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">七</span>大运详解</h2>
+          <span class="card-sub">十步大运，每步 15 句以上，逐年展开</span>
+        </div>
+        <div id="dayun-detail-box"></div>
+      </div>
+
+      <!-- 八、六维专题 -->
+      <div class="card" id="card-topics">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">八</span>六维专题</h2>
+        </div>
+        <div class="topic-layout">
+          <figure class="chart-box">
+            <div class="chart-canvas" id="chart-radar"></div>
+            <figcaption>本命六维资源分布，数值为各维占命局的分量（看的是本钱，不是吉凶）</figcaption>
+          </figure>
+          <div id="topics-box"></div>
+        </div>
+      </div>
+
+      <!-- 九、关键时间点 -->
+      <div class="card" id="card-keys">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">九</span>关键时间点</h2>
+        </div>
+        <div id="keys-box"></div>
+      </div>
+
+      <!-- 十、趋吉避凶 -->
+      <div class="card" id="card-advice">
+        <div class="card-head">
+          <h2 class="card-title"><span class="t-mark">十</span>趋吉避凶</h2>
+        </div>
+        <div id="advice-box"></div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<!-- ==================================================================
+     加载遮罩
+     ================================================================== -->
+<div class="loading-mask" id="loading-mask" hidden>
+  <div class="loading-inner">
+    <div class="loading-taiji" aria-hidden="true"></div>
+    <p class="loading-text" id="loading-text">正在起局…</p>
+  </div>
+</div>
+
+<!-- ==================================================================
+     弹层：档案 / 凡例 / JSON
+     ================================================================== -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-mask" data-close></div>
+  <div class="modal-body">
+    <div class="modal-head">
+      <h2 id="modal-title"></h2>
+      <button type="button" class="btn-close" data-close aria-label="关闭">×</button>
+    </div>
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ==================================================================
+     页脚免责
+     ================================================================== -->
+<footer class="site-foot">
+  <p class="foot-main">本站内容仅供传统文化研究与娱乐参考，不构成任何医疗、投资、法律、婚育建议。</p>
+  <p class="foot-sub">命理推演为传统术数模型，非科学预测。人生取舍，请以现实条件与专业意见为准。</p>
+  <p class="foot-sub">全部计算在本机浏览器完成，生辰数据不上传、不外传。</p>
+</footer>
+
+<!-- ==================================================================
+     脚本：顺序不可乱（无构建，全局命名空间 WT）
+     ================================================================== -->
+<script src="lib/lunar.js"></script>
+<script src="lib/echarts.min.js"></script>
+
+<script src="js/core/tables.js"></script>
+<script src="js/core/solar-time.js"></script>
+<script src="js/core/cities.js"></script>
+<script src="js/core/wangshuai.js"></script>
+<!-- shensha 必须在 paipan 之前：paipan.build() 末尾会调 WT.shensha.apply -->
+<script src="js/core/shensha.js"></script>
+<script src="js/core/paipan.js"></script>
+
+<!-- 算法与文案 -->
+<script src="js/core/assess.js"></script>
+<script src="js/text/phrases.js"></script>
+<script src="js/text/report.js"></script>
+
+<script src="js/ui/storage.js"></script>
+<script src="js/ui/charts.js"></script>
+<script src="js/ui/render.js"></script>
+<script src="js/ui/report-view.js"></script>
+<script src="js/ui/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

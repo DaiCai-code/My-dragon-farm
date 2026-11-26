@@ -7,4 +7,3 @@ print(x)
 print(y)
 # 直接返回元组
 a = return_test()
-print(a,type(a))

@@ -1,0 +1,13 @@
+[project]
+name = "python-basics"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.165.0",
+    "openai>=3.57.0",
+    "uvicorn>=0.54.0",
+]
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple"
+default = true

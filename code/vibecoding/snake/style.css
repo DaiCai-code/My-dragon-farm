@@ -1,0 +1,780 @@
+/* ============================================================
+   霓虹蛇行 / NEON SERPENT
+   赛博朋克主题：霓虹青 + 品红，深蓝黑底，扫描线 / 暗角 / 噪点
+   ============================================================ */
+
+:root {
+  /* ===== 色阶 ===== */
+  --cy-950: #05060d;
+  --cy-900: #080b16;
+  --cy-850: #0b1020;
+  --cy-800: #0e1529;
+  --cy-700: #131d38;
+  --cy-600: #1b2a4d;
+  --cy-500: #263a63;
+  --cy-400: #365282;
+  --cy-300: #4f72a6;
+  --cy-200: #7a9cc9;
+  --cy-100: #aec6e6;
+  --cy-050: #dff4ff;
+
+  /* ===== 霓虹强调色 ===== */
+  --neon-cyan: #00f0ff;
+  --neon-cyan-dim: rgba(0, 240, 255, 0.35);
+  --neon-magenta: #ff2d95;
+  --neon-magenta-dim: rgba(255, 45, 149, 0.32);
+  --neon-yellow: #ffe600;
+  --danger: #ff2d55;
+
+  /* ===== 面板与描边 ===== */
+  --panel: rgba(8, 11, 22, 0.9);
+  --panel-raised: rgba(19, 29, 56, 0.94);
+  --line: rgba(0, 240, 255, 0.16);
+  --line-strong: rgba(0, 240, 255, 0.42);
+
+  /* ===== 字体 ===== */
+  --font-display: 'Orbitron', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  --font-mono: 'Share Tech Mono', Consolas, 'Courier New', monospace;
+  --font-body: 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+
+  /* 切角尺寸 */
+  --cut: 10px;
+
+  /* 内联 SVG 噪点，零外部资源 */
+  --noise-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   基础
+   ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--cy-950);
+  color: var(--cy-050);
+  font-family: var(--font-body);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  touch-action: none; /* 手机上禁掉滚动，滑动才不会被页面吃掉 */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.noscript {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--cy-950);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  z-index: 100;
+}
+
+/* ============================================================
+   顶部状态栏
+   ============================================================ */
+
+#hud {
+  position: relative;
+  z-index: 25; /* 始终压在开始/结算界面之上，随时能看到分数 */
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 40px);
+  padding: 14px clamp(14px, 3vw, 30px);
+  background: linear-gradient(to bottom, rgba(5, 6, 13, 0.95), transparent);
+  border-bottom: 1px solid var(--line);
+}
+
+.hud-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hud-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--cy-300);
+}
+
+.hud-value {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 12px var(--neon-cyan-dim);
+  min-width: 2ch;
+}
+
+.hud-item--best .hud-value {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 12px rgba(255, 230, 0, 0.35);
+}
+
+/* 数值跳动：内容变化时加一帧高亮 */
+.hud-value.bump {
+  animation: value-bump 0.28s ease-out;
+}
+
+@keyframes value-bump {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  35% {
+    transform: scale(1.22);
+    filter: brightness(1.7);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.icon-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 6px 12px;
+  cursor: pointer;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
+  transition: background 0.15s, box-shadow 0.15s, color 0.15s;
+}
+
+.icon-btn:hover {
+  background: rgba(0, 240, 255, 0.12);
+  box-shadow: 0 0 14px var(--neon-cyan-dim);
+}
+
+.icon-btn.is-muted {
+  color: var(--cy-400);
+  border-color: rgba(120, 150, 190, 0.25);
+}
+
+/* ============================================================
+   棋盘
+   ============================================================ */
+
+#game-wrap {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow: hidden;
+  padding: 10px;
+}
+
+/* 两层画布用绝对定位居中。
+   绝对定位让画布脱离布局流——canvas 的固有尺寸（width/height 属性）不会去撑大容器，
+   否则格子会被挤偏，边界框还会被裁掉一半。 */
+#bg,
+#stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+}
+
+#bg {
+  opacity: 0.9;
+}
+
+#stage {
+  z-index: 1;
+}
+
+/* 连击徽章 */
+#combo-badge {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 18px rgba(255, 230, 0, 0.6);
+  animation: combo-pulse 0.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes combo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   开始 / 暂停 / 结算界面
+   ============================================================ */
+
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at center, rgba(5, 6, 13, 0.78), rgba(5, 6, 13, 0.95));
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  padding: 20px;
+}
+
+.screen-inner {
+  position: relative;
+  width: min(520px, 100%);
+  text-align: center;
+}
+
+/* 四角切角装饰 */
+.screen-corners {
+  position: absolute;
+  inset: 4vh 5vw;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) left top / 34px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) left top / 1px 34px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) right top / 34px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) right top / 1px 34px no-repeat,
+    linear-gradient(var(--neon-magenta), var(--neon-magenta)) left bottom / 34px 1px no-repeat,
+    linear-gradient(var(--neon-magenta), var(--neon-magenta)) left bottom / 1px 34px no-repeat,
+    linear-gradient(var(--neon-magenta), var(--neon-magenta)) right bottom / 34px 1px no-repeat,
+    linear-gradient(var(--neon-magenta), var(--neon-magenta)) right bottom / 1px 34px no-repeat;
+  opacity: 0.55;
+}
+
+.status-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: var(--neon-cyan);
+  margin-bottom: 18px;
+}
+
+.status-line--danger {
+  color: var(--danger);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  border-radius: 50%;
+  animation: dot-blink 1.4s ease-in-out infinite;
+}
+
+.status-dot--danger {
+  background: var(--danger);
+  box-shadow: 0 0 10px var(--danger);
+}
+
+.status-dot--warn {
+  background: var(--neon-yellow);
+  box-shadow: 0 0 10px var(--neon-yellow);
+}
+
+@keyframes dot-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* 标题：RGB 错位故障效果 */
+.glitch {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(34px, 8vw, 62px);
+  letter-spacing: 0.06em;
+  color: var(--cy-050);
+  text-shadow: 0 0 30px var(--neon-cyan-dim);
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: var(--neon-magenta);
+  animation: glitch-a 3.1s infinite steps(2, end);
+}
+
+.glitch::after {
+  color: var(--neon-cyan);
+  animation: glitch-b 2.3s infinite steps(2, end);
+}
+
+@keyframes glitch-a {
+  0%,
+  92%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  93% {
+    transform: translate(-4px, 2px);
+    opacity: 0.85;
+  }
+  95% {
+    transform: translate(3px, -2px);
+    opacity: 0.85;
+  }
+  97% {
+    transform: translate(-2px, 1px);
+    opacity: 0.85;
+  }
+}
+
+@keyframes glitch-b {
+  0%,
+  90%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  91% {
+    transform: translate(4px, -2px);
+    opacity: 0.85;
+  }
+  94% {
+    transform: translate(-3px, 2px);
+    opacity: 0.85;
+  }
+  96% {
+    transform: translate(2px, -1px);
+    opacity: 0.85;
+  }
+}
+
+.title-cn {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 3vw, 20px);
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: var(--neon-magenta);
+  margin-top: 4px;
+  text-shadow: 0 0 18px var(--neon-magenta-dim);
+}
+
+.subtitle {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--cy-200);
+  letter-spacing: 0.06em;
+}
+
+.pause-title {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 6vw, 40px);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 26px rgba(255, 230, 0, 0.35);
+  margin-bottom: 16px;
+}
+
+.game-over-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(26px, 6vw, 44px);
+  letter-spacing: 0.08em;
+  color: var(--danger);
+  text-shadow: 0 0 26px rgba(255, 45, 85, 0.45);
+}
+
+.game-over-cn {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--cy-200);
+}
+
+/* 操作说明卡片 */
+.controls-card {
+  margin: 24px auto;
+  padding: 16px 20px;
+  max-width: 380px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--cy-200);
+}
+
+.control-row .keys {
+  display: flex;
+  gap: 5px;
+  min-width: 116px;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 24px;
+  padding: 3px 6px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.07);
+  border: 1px solid var(--line-strong);
+  clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+}
+
+.phone-only {
+  display: none;
+}
+
+/* 结算数据 */
+.result-card {
+  margin: 24px auto;
+  padding: 6px 20px;
+  max-width: 380px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  font-size: 14px;
+  color: var(--cy-200);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.08);
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.result-row strong {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--neon-cyan);
+}
+
+.result-row.best strong {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 12px rgba(255, 230, 0, 0.35);
+}
+
+.new-record {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 20px rgba(255, 230, 0, 0.55);
+  animation: record-flash 1.1s ease-in-out infinite;
+  margin-bottom: 18px;
+}
+
+@keyframes record-flash {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   按钮
+   ============================================================ */
+
+.primary-btn {
+  display: inline-block;
+  padding: 13px 34px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: var(--cy-950);
+  background: var(--neon-cyan);
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+  box-shadow: 0 0 22px var(--neon-cyan-dim);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+}
+
+.primary-btn:hover {
+  background: #6ff7ff;
+  box-shadow: 0 0 34px rgba(0, 240, 255, 0.65);
+  transform: translateY(-1px);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+.tip {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--cy-400);
+}
+
+/* ============================================================
+   全屏氛围层
+   ============================================================ */
+
+/* 调色层：给整个画面压一层霓虹偏色 */
+.fx-grade {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(155deg, rgba(0, 240, 255, 0.055), rgba(255, 45, 149, 0.055));
+  mix-blend-mode: screen;
+}
+
+#fx-top {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* CRT 扫描线 */
+.fx-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0 2px,
+    rgba(0, 0, 0, 0.18) 2px 4px
+  );
+}
+
+/* 暗角 */
+.fx-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(2, 3, 10, 0) 46%,
+    rgba(2, 3, 10, 0.4) 78%,
+    rgba(2, 3, 10, 0.78) 100%
+  );
+}
+
+/* 死亡红闪 */
+.fx-flash {
+  position: absolute;
+  inset: 0;
+  background: var(--danger);
+  opacity: 0;
+}
+
+body[data-state='over'] .fx-flash {
+  animation: flash-danger 0.55s ease-out;
+}
+
+@keyframes flash-danger {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+body[data-state='over'] .fx-grade {
+  background: linear-gradient(155deg, rgba(255, 45, 85, 0.14), rgba(255, 45, 149, 0.1));
+}
+
+/* 颗粒噪点 */
+.fx-grain {
+  position: fixed;
+  inset: -60px;
+  z-index: 41;
+  pointer-events: none;
+  background-image: var(--noise-img);
+  opacity: 0.045;
+  animation: grain-shift 0.5s steps(3) infinite;
+}
+
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-18px, 12px);
+  }
+  66% {
+    transform: translate(14px, -16px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+
+@media (max-width: 520px) {
+  #hud {
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .hud-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+  }
+
+  .hud-value {
+    font-size: 17px;
+  }
+
+  .controls-card {
+    padding: 12px 14px;
+  }
+
+  .control-row {
+    font-size: 12px;
+  }
+
+  .control-row .keys {
+    min-width: 92px;
+  }
+
+  #combo-badge {
+    font-size: 20px;
+    top: 12px;
+    right: 14px;
+  }
+}
+
+@media (max-height: 560px) {
+  .subtitle {
+    display: none;
+  }
+
+  .controls-card {
+    margin: 14px auto;
+  }
+
+  .primary-btn {
+    padding: 10px 26px;
+  }
+}
+
+/* 触屏设备：显示手机操作提示，关掉最贵的噪点动画 */
+@media (pointer: coarse) {
+  .phone-only {
+    display: flex;
+  }
+
+  .fx-grain {
+    animation: none;
+    opacity: 0.03;
+  }
+}
+
+/* ============================================================
+   减少动态效果：系统开启时全量降级
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+
+  .fx-grain {
+    display: none;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    display: none;
+  }
+}

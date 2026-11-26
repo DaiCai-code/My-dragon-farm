@@ -1,0 +1,8 @@
+print("hello world")
+print(True)
+print(False)
+print(10)
+print(3.14)
+print(-11)
+print(None)
+# print(sdfasfasf)

@@ -1,0 +1,18 @@
+[
+    {
+        "id": "N001",
+        "title": "钢铁是怎样炼成的",
+        "author": "司机",
+        "publisher": "苏联",
+        "total_pages": 1000,
+        "price": 1000.0
+    },
+    {
+        "id": "N002",
+        "title": "月子",
+        "author": "宋丹丹",
+        "publisher": "铁岭",
+        "total_pages": 1000,
+        "price": 1000.0
+    }
+]

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Coze 对话</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div class="brand-text">
+          <h1>Coze 对话</h1>
+          <p id="conn-status" class="conn-status" data-state="idle">正在连接…</p>
+        </div>
+      </div>
+      <button id="new-chat" class="ghost-btn" type="button" title="清空当前对话并开启新会话">
+        新对话
+      </button>
+    </header>
+
+    <main id="scroller" class="scroller">
+      <div id="thread" class="thread">
+        <section id="empty" class="empty">
+          <p class="empty-eyebrow">智能体</p>
+          <h2 class="empty-title">有什么想聊的？</h2>
+          <p class="empty-desc">输入问题，回答会逐字浮现。对话上下文会保存在当前浏览器中。</p>
+          <div class="empty-hints">
+            <button class="hint" type="button">用三句话解释什么是流式响应</button>
+            <button class="hint" type="button">帮我写一段 Python 快速排序</button>
+            <button class="hint" type="button">推荐几本科幻小说</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <button id="jump-bottom" class="jump-bottom" type="button" hidden aria-label="回到底部">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+        <path d="M8 3v10M3.5 8.5L8 13l4.5-4.5" fill="none" stroke="currentColor"
+              stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <form id="composer" class="composer" autocomplete="off">
+      <div id="error-bar" class="error-bar" role="alert" hidden></div>
+      <div class="input-wrap">
+        <textarea id="input" rows="1" maxlength="4000"
+                  placeholder="发消息…" aria-label="消息输入"></textarea>
+        <button id="send" class="send" type="submit" aria-label="发送" title="发送">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+            <path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="currentColor"
+                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="stop" class="send send-stop" type="button" aria-label="停止生成" title="停止生成" hidden>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <rect x="4" y="4" width="8" height="8" rx="1.5" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+      <p class="composer-hint">
+        <kbd>Enter</kbd> 发送 · <kbd>Shift</kbd>+<kbd>Enter</kbd> 换行 · 回答由 Coze 生成
+      </p>
+    </form>
+  </div>
+
+  <template id="msg-template">
+    <article class="msg">
+      <div class="msg-content">
+        <span class="msg-text"></span><span class="caret" hidden aria-hidden="true"></span>
+      </div>
+    </article>
+  </template>
+
+  <script src="vendor/axios.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
